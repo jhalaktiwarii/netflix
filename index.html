@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1941,11 +1941,47 @@
                 const section = document.getElementById('fan-theories-section');
                 section.classList.remove('hidden');
 
-                // Add loading indicator
                 const theoriesContainer = document.querySelector('#chat-theory-section .space-y-6');
-                theoriesContainer.innerHTML = '<div class="text-white text-center py-4">Generating theories...</div>';
 
-                // Rest of your code...
+                theoriesContainer.innerHTML = HARDCODED_FAN_THEORIES.map(theory => `
+                    <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <img src="${theory.avatar}" alt="${theory.theorist}" class="w-10 h-10 rounded-full mr-3">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-white font-medium">${theory.theorist}</h4>
+                                    <span class="text-gray-400 text-sm">${theory.timeAgo}</span>
+                                </div>
+                                <p class="text-gray-200 mb-4">${theory.content}</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex space-x-4">
+                                        <button class="reaction-btn" data-reaction="like" onclick="addReaction(this)">
+                                            <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                            <span class="ml-1 text-gray-400">${theory.likes}</span>
+                                        </button>
+                                        <button class="reaction-btn" data-reaction="heart" onclick="addReaction(this)">
+                                            <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                            <span class="ml-1 text-gray-400">${theory.hearts}</span>
+                                        </button>
+                                        <button class="reaction-btn" data-reaction="laugh" onclick="addReaction(this)">
+                                            <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                            <span class="ml-1 text-gray-400">${theory.laughs}</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <button class="upvote-btn" onclick="vote(this, 'up')">
+                                            <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                        </button>
+                                        <span class="mx-2 text-white">${theory.votes}</span>
+                                        <button class="downvote-btn" onclick="vote(this, 'down')">
+                                            <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
             }
 
             // Add to your existing JavaScript
@@ -2824,177 +2860,114 @@
                 initializeProfileMenu();
             });
 
-            async function generateFanTheories(movie) {
-                try {
-                    const prompt = `Generate 10 unique fan theories for ${movie.title}. For each theory:
-1. Create a creative fictional theorist name (e.g., "Lore Explorer", "Cinema Sleuth")
-2. Write a 2-3 paragraph theory with specific scene/character references
-3. Make theories range from plausible to speculative
-4. Format exactly like:
-   **[Theorist Name]** 
-   [Theory text]`;
-
-                    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }],
-                            safetySettings: [{ category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }],
-                            generationConfig: { temperature: 0.9, topK: 40, topP: 0.95 }
-                        })
-                    });
-
-                    const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
-
-                } catch (error) {
-                    console.error('Error generating theories:', error);
-                    return fallbackTheories;
+            // Hardcoded fan theories dataset
+            const HARDCODED_FAN_THEORIES = [
+                {
+                    id: 1,
+                    theorist: "StrangerTheories",
+                    avatar: "https://i.pravatar.cc/150?img=1",
+                    timeAgo: "2 days ago",
+                    content: "I believe Eleven is actually connected to the Upside Down in a way we haven't seen yet. What if she wasn't just experimented on, but was actually born there and brought to our world? This would explain her innate connection to the dimension and why she's so powerful.",
+                    likes: 124,
+                    hearts: 56,
+                    laughs: 17,
+                    votes: 89
+                },
+                {
+                    id: 2,
+                    theorist: "WandaVisionExpert",
+                    avatar: "https://i.pravatar.cc/150?img=2",
+                    timeAgo: "1 week ago",
+                    content: "What if Wanda's powers in WandaVision are actually affecting multiple realities simultaneously? The hex could be creating ripples across the multiverse, explaining the events in Doctor Strange and other Phase 4 projects. Her grief might be the catalyst for the entire multiverse saga.",
+                    likes: 78,
+                    hearts: 42,
+                    laughs: 12,
+                    votes: 65
+                },
+                {
+                    id: 3,
+                    theorist: "LokiLorekeeper",
+                    avatar: "https://i.pravatar.cc/150?img=3",
+                    timeAgo: "3 days ago",
+                    content: "The TVA in Loki isn't just managing timelines - they're actually creating them. Every 'pruned' timeline doesn't get destroyed but becomes a new branch in the multiverse. This explains why we see so many variants and why He Who Remains needed to manage them all.",
+                    likes: 203,
+                    hearts: 117,
+                    laughs: 8,
+                    votes: 156
+                },
+                {
+                    id: 4,
+                    theorist: "MarvelMysteryHunter",
+                    avatar: "https://i.pravatar.cc/150?img=4",
+                    timeAgo: "5 days ago",
+                    content: "The quantum realm isn't just a microscopic dimension - it's the foundation of all reality in the MCU. The patterns we see there match the energy signatures of Infinity Stones, suggesting it's where the fundamental forces of the universe originate.",
+                    likes: 167,
+                    hearts: 92,
+                    laughs: 14,
+                    votes: 128
+                },
+                {
+                    id: 5,
+                    theorist: "CosmicSpeculator",
+                    avatar: "https://i.pravatar.cc/150?img=5",
+                    timeAgo: "1 day ago",
+                    content: "What if the real reason Doctor Strange gave up the Time Stone wasn't just to ensure the one winning future - but because he saw that the stones themselves were limiting the universe's natural evolution? Their destruction was necessary for the multiverse to flourish.",
+                    likes: 87,
+                    hearts: 36,
+                    laughs: 23,
+                    votes: 72
                 }
-            }
+            ];
 
-            function parseTheories(rawText) {
-                return rawText.split('\n\n').filter(t => t.startsWith('**')).map(theory => {
-                    const [nameLine, ...contentLines] = theory.split('\n');
-                    return {
-                        theorist: nameLine.replace('**', '').trim(),
-                        content: contentLines.join('\n').trim()
-                    };
-                });
-            }
-
-            async function showFanTheories() {
+            // Replace the dynamic showFanTheories function with a static version
+            function showFanTheories() {
                 const section = document.getElementById('fan-theories-section');
                 section.classList.remove('hidden');
 
                 const theoriesContainer = document.querySelector('#chat-theory-section .space-y-6');
-                theoriesContainer.innerHTML = '<div class="text-center py-4">Generating theories...</div>';
 
-                try {
-                    const rawTheories = await generateFanTheories(currentMovie);
-                    const parsedTheories = parseTheories(rawTheories);
-
-                    theoriesContainer.innerHTML = parsedTheories.map((theory, index) => `
-                        <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
-                            <div class="flex items-start">
-                                <img src="https://i.pravatar.cc/150?img=${index + 10}" 
-                                     alt="${theory.theorist}" class="w-10 h-10 rounded-full mr-3">
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <h4 class="text-white font-medium">${theory.theorist}</h4>
-                                        <span class="text-gray-400 text-sm">Just now</span>
+                theoriesContainer.innerHTML = HARDCODED_FAN_THEORIES.map(theory => `
+                    <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <img src="${theory.avatar}" alt="${theory.theorist}" class="w-10 h-10 rounded-full mr-3">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-white font-medium">${theory.theorist}</h4>
+                                    <span class="text-gray-400 text-sm">${theory.timeAgo}</span>
+                                </div>
+                                <p class="text-gray-200 mb-4">${theory.content}</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex space-x-4">
+                                        <button class="reaction-btn" data-reaction="like" onclick="addReaction(this)">
+                                            <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                            <span class="ml-1 text-gray-400">${theory.likes}</span>
+                                        </button>
+                                        <button class="reaction-btn" data-reaction="heart" onclick="addReaction(this)">
+                                            <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                            <span class="ml-1 text-gray-400">${theory.hearts}</span>
+                                        </button>
+                                        <button class="reaction-btn" data-reaction="laugh" onclick="addReaction(this)">
+                                            <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                            <span class="ml-1 text-gray-400">${theory.laughs}</span>
+                                        </button>
                                     </div>
-                                    <p class="text-gray-200 mb-4">${theory.content}</p>
-                                    <!-- Keep existing reaction/vote UI -->
+                                    <div class="flex items-center">
+                                        <button class="upvote-btn" onclick="vote(this, 'up')">
+                                            <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                        </button>
+                                        <span class="mx-2 text-white">${theory.votes}</span>
+                                        <button class="downvote-btn" onclick="vote(this, 'down')">
+                                            <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    `).join('');
-
-                } catch (error) {
-                    theoriesContainer.innerHTML = '<div class="text-red-500">Error loading theories. Please try again later.</div>';
-                }
+                    </div>
+                `).join('');
             }
 
-            const fallbackTheories = `
-            **Lila Voss**
-            The opening chess game between Beth and Mr. Shaibel isn't just about strategy - it's a metaphor for the Cold War. Each piece represents a geopolitical player, with the queen symbolizing nuclear capability. The show's color palette shifts whenever Beth makes a move that parallels real-world events.
-
-            **The Temporal Theorist**
-            What if the entire series is a time-loop punishment for Beth? The recurring mirror shots and her mother's cryptic "you'll see" suggest she's reliving her life to atone for abandoning her adoptive family. The Russian finale is actually her breaking the cycle.
-
-            ... (additional fallback theories) ...
-            `;
-
-            // Update play button handler
-            document.getElementById('play-button').addEventListener('click', () => {
-                const iframe = document.querySelector('#video-container iframe');
-                if (iframe) {
-                    iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
-                }
-            });
-
-            // Add separate play function
-            function playBannerVideo() {
-                const iframe = document.querySelector('#video-container iframe');
-                if (iframe) {
-                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                } else {
-                    showMovieDetails(currentBannerId);
-                }
-            }
-
-            // Add these variables at the top
-            let isMuted = true;
-            let isPlaying = false;
-
-            // Update video container creation
-            if (videoData.results?.length > 0) {
-                const trailer = videoData.results.find(v => v.type === "Trailer") || videoData.results[0];
-                videoContainer.innerHTML = `
-                    <iframe 
-                        width="100%" 
-                        height="100%"
-                        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&enablejsapi=1"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                `;
-                isMuted = true;
-                isPlaying = true;
-            }
-
-            // Add mute/unmute functionality
-            document.getElementById('mute-button').addEventListener('click', function () {
-                const iframe = document.getElementById('yt-video');
-                isMuted = !isMuted;
-                iframe.contentWindow.postMessage(JSON.stringify({
-                    event: 'command',
-                    func: isMuted ? 'mute' : 'unMute'
-                }), '*');
-                this.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-            });
-
-            // Update play button functionality
-            document.getElementById('play-button').addEventListener('click', function () {
-                const iframe = document.getElementById('yt-video');
-                isPlaying = !isPlaying;
-
-                iframe.contentWindow.postMessage(JSON.stringify({
-                    event: 'command',
-                    func: isPlaying ? 'playVideo' : 'pauseVideo'
-                }), '*');
-
-                this.innerHTML = isPlaying
-                    ? '<i class="fas fa-pause mr-5 xl:mr-2"></i>Pause'
-                    : '<i class="fas fa-play mr-5 xl:mr-2"></i>Play';
-            });
-
-            // Add keyboard controls
-            document.addEventListener('keydown', (e) => {
-                if (e.code === 'Space') {
-                    e.preventDefault();
-                    document.getElementById('play-button').click();
-                }
-            });
-
-            // Update banner play button
-            function playBannerVideo() {
-                const iframe = document.getElementById('yt-video');
-                if (!iframe) {
-                    showMovieDetails(currentBannerId);
-                    return;
-                }
-
-                iframe.contentWindow.postMessage(JSON.stringify({
-                    event: 'command',
-                    func: 'playVideo'
-                }), '*');
-
-                isPlaying = true;
-                document.getElementById('play-button').innerHTML = '<i class="fas fa-pause mr-5 xl:mr-2"></i>Pause';
-            }
+            // Remove the generateFanTheories and parseTheories functions since we don't need them anymore
         </script>
 </body>
 
