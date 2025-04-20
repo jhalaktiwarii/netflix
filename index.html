@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+
+    <!-- Netflix Sans Font -->
+    <link rel="stylesheet" href="https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2"
+        as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Md.woff2"
+        as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2"
+        as="font" type="font/woff2" crossorigin>
+
+    <!-- Tailwind and Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'tab': '481px',
+                        'xl': '769px',
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @font-face {
+            font-family: 'Netflix Sans';
+            font-weight: 400;
+            src: url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Netflix Sans';
+            font-weight: 500;
+            src: url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Md.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Netflix Sans';
+            font-weight: 700;
+            src: url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2') format('woff2');
+        }
+
+        /* Base styles */
+        body {
+            background-color: #141414;
+            color: white;
+            margin: 0;
+            font-family: 'Netflix Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Netflix Logo */
+        .netflix-logo {
+            height: 25px;
+            width: auto;
+        }
+
+        /* Banner styles */
+        .banner-gradient {
+            background: linear-gradient(77deg,
+                    rgba(0, 0, 0, 0.6) 0,
+                    rgba(0, 0, 0, 0) 85%),
+                linear-gradient(180deg,
+                    rgba(0, 0, 0, 0.7) 0,
+                    transparent 50%,
+                    rgba(0, 0, 0, 0.7));
+        }
+
+        .banner-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+            margin-bottom: 1rem;
+        }
+
+        .banner-description {
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+        }
+
+        /* Match percentage */
+        .match-score {
+            color: #46d369;
+            font-weight: 500;
+        }
+
+        /* Navigation */
+        .nav-link {
+            color: #e5e5e5;
+            font-size: 0.875rem;
+            font-weight: 400;
+            margin-right: 1.25rem;
+            text-decoration: none;
+            transition: color 0.4s;
+        }
+
+        .nav-link:hover {
+            color: #b3b3b3;
+        }
+
+        /* Movie card styles */
+        .movie-card {
+            position: relative;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .movie-card:hover .movie-info {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 100%);
+            padding: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Buttons */
+        .play-button {
+            background-color: white;
+            color: black;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .play-button:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+
+        .more-info-button {
+            background-color: rgba(109, 109, 110, 0.7);
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .more-info-button:hover {
+            background-color: rgba(109, 109, 110, 0.4);
+        }
+
+        /* Category title */
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #e5e5e5;
+            margin: 1.5rem 0 1rem;
+        }
+
+        /* Search bar */
+        .search-bar {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            width: 200px;
+            transition: width 0.3s;
+        }
+
+        .search-bar:focus {
+            width: 300px;
+            outline: none;
+        }
+
+        /* Profile button */
+        .profile-button {
+            position: relative;
+        }
+
+        #profile-button img {
+            border-radius: 0.125rem;
+            object-fit: cover;
+            transition: all 0.2s ease;
+        }
+
+        #profile-button img:hover {
+            opacity: 0.85;
+        }
+
+        #profile-menu {
+            transform-origin: top right;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Add these animations for the menu */
+        .animate-in {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+
+        .slide-in-from-top-2 {
+            animation: slideInFromTop 0.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-0.5rem);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Sign in button */
+        .sign-in-button {
+            background-color: #e50914;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .sign-in-button:hover {
+            background-color: #f40612;
+        }
+
+        /* Horizontal scroll */
+        .movie-row {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 20px 0;
+        }
+
+        .movie-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Modal/Drawer */
+        .drawer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .drawer.active {
+            display: block;
+        }
+
+        .drawer-content {
+            background: #181818;
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Search results styles */
+        .search-results {
+            position: fixed;
+            top: 68px;
+            left: 0;
+            right: 0;
+            min-height: calc(100vh - 68px);
+            background: #141414;
+            z-index: 40;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .search-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+
+        .search-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .search-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            margin: 0.25rem;
+            transition: transform 0.15s ease-out;
+        }
+
+        .search-card img:hover {
+            transform: scale(1.1);
+        }
+
+        .fan-theory-nav-btn.active {
+            background-color: #e50914;
+        }
+
+        .theory-section {
+            min-height: calc(100vh - 200px);
+        }
+
+        .fan-theory-nav-btn {
+            transition: background-color 0.3s ease;
+        }
+
+        .poster-card {
+            transition: transform 0.3s ease;
+        }
+
+        .poster-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Add these styles to your existing style section */
+        .profile-menu {
+            transform-origin: top right;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .profile-button {
+            position: relative;
+        }
+
+        #profile-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 0.5rem;
+            width: 200px;
+            background-color: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            color: #e5e5e5;
+            transition: background-color 0.2s;
+        }
+
+        .profile-menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-[#141414]">
+    <div id="app" class="relative min-h-screen">
+        <!-- Navigation Header -->
+        <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+            <div class="flex items-center justify-between px-12 py-4">
+                <!-- Netflix Logo -->
+                <div class="flex items-center space-x-8">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix"
+                        class="netflix-logo">
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="#" class="nav-link">Home</a>
+                        <a href="#" class="nav-link">TV Shows</a>
+                        <a href="#" class="nav-link">Movies</a>
+                        <a href="#" class="nav-link">New & Popular</a>
+                        <a href="#" class="nav-link">My List</a>
+                    </div>
+                </div>
+
+                <!-- Right Navigation -->
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <i class="fas fa-search text-white text-xl cursor-pointer"></i>
+                        <input type="text" placeholder="Titles, people, genres"
+                            class="search-bar hidden bg-black/75 border border-white/85 text-white px-4 py-2 rounded-md w-[200px] transition-all duration-300 focus:w-[300px] focus:outline-none">
+                    </div>
+                    <i class="fas fa-bell text-white text-xl"></i>
+                    <div class="relative" id="profile-button">
+                        <button
+                            class="inline-flex items-center justify-center rounded-md  font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 bg-transparent text-slate-100 hover:text-slate-100 data-[state=open]:bg-transparent dark:text-slate-100 dark:hover:text-slate-100 dark:data-[state=open]:bg-transparent h-auto shrink-0 text-base hover:bg-transparent focus:ring-0 hover:dark:bg-neutral-800">
+                            <img src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp"
+                                alt="Profile"
+                                class="relative aspect-square h-8 w-8 overflow-hidden rounded shadow-sm object-cover transition-opacity hover:opacity-80">
+                        </button>
+
+                        <!-- Profile Menu Dropdown -->
+                        <div id="profile-menu" class="hidden absolute xl:top-[5em] right-2 top-12 z-50 w-64">
+                            <div
+                                class="overflow-hidden rounded-md bg-neutral-800/95 text-slate-200 border-none shadow-lg animate-in data-[side=bottom]:slide-in-from-top-2">
+                                <div id="profile-list" class="p-2">
+                                    <!-- Profiles will be dynamically added here -->
+                                </div>
+
+                                <div class="border-t border-slate-700 my-1"></div>
+
+                                <!-- Menu Items -->
+                                <a href="#" onclick="navigateToManageProfiles(); return false;"
+                                    class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 px-3 text-sm font-medium outline-none hover:bg-neutral-700">
+                                    <i class="fas fa-pencil-alt text-[#94a3b8] mr-3"></i>
+                                    <span class="line-clamp-1">Manage Profiles</span>
+                                </a>
+                                <a href="#" onclick="exitProfile(); return false;"
+                                    class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 px-3 text-sm font-medium outline-none hover:bg-neutral-700">
+                                    <i class="fas fa-sign-out-alt text-[#94a3b8] mr-3"></i>
+                                    <span class="line-clamp-1">Exit Profile</span>
+                                </a>
+                                <a href="#" onclick="showAccountSettings(); return false;"
+                                    class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 px-3 text-sm font-medium outline-none hover:bg-neutral-700">
+                                    <i class="fas fa-user text-[#94a3b8] mr-3"></i>
+                                    <span class="line-clamp-1">Account</span>
+                                </a>
+                                <a href="#"
+                                    class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 px-3 text-sm font-medium outline-none hover:bg-neutral-700">
+                                    <i class="fas fa-question-circle text-[#94a3b8] mr-3"></i>
+                                    <span class="line-clamp-1">Help Center</span>
+                                </a>
+
+                                <div class="border-t border-slate-700 my-1"></div>
+
+                                <a href="#" onclick="signOut(); return false;"
+                                    class="relative flex cursor-pointer select-none items-center justify-center rounded-sm py-1.5 px-3 text-sm font-medium outline-none hover:bg-neutral-700 mx-auto">
+                                    Sign Out of Netflix
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="banner" class="relative h-[448px] w-full">
+            <div id="banner-bg" class="absolute top-0 left-0   w-full bg-cover bg-center h-[66em]">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent opacity-100">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+            </div>
+            <div class="absolute bottom-[20%] left-12 flex flex-col gap-3 text-white xl:bottom-[20%] tab:bottom-[20%]">
+                <h1 id="banner-title" class="text-5xl font-bold"></h1>
+                <div class="flex items-center gap-3">
+                    <span id="banner-match" class="text-sm font-semibold text-green-500"></span>
+                    <span id="banner-release" class="text-sm"></span>
+                </div>
+                <p id="banner-overview" class="w-[40%] text-sm xl:w-[60%] tab:w-[60%] line-clamp-3"></p>
+                <div class="flex items-center gap-3">
+                    <button onclick="playBannerVideo()"
+                        class="flex items-center gap-2 rounded bg-white px-6 py-2 text-black transition-all hover:bg-opacity-80">
+                        <i class="fas fa-play"></i>
+                        Play
+                    </button>
+                    <button onclick="showMovieDetails(currentBannerId)"
+                        class="flex items-center gap-2 rounded bg-gray-500 bg-opacity-50 px-6 py-2 transition-all hover:bg-opacity-40">
+                        <i class="fas fa-info-circle"></i>
+                        More Info
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movies Section -->
+        <div id="movies-section" class="relative z-20 mt-[-50px] pb-20">
+            <!-- Movie rows will be dynamically populated -->
+        </div>
+
+        <!-- Movie Detail Drawer -->
+        <div id="movie-drawer" class="hidden">
+            <div class="fixed inset-0 flex items-start justify-center sm:items-center z-[1000]">
+                <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-all duration-100"></div>
+                <div
+                    class="fixed h-full z-50 grid gap-4 animate-in w-full overflow-hidden rounded-md bg-zinc-900 p-0 text-left align-middle shadow-xl dark:bg-zinc-900 sm:max-w-[750px]   xl:max-w-[950px]">
+                    <div class="relative aspect-video">
+                        <div
+                            class="bg-black/10 bg-gradient-to-b from-neutral-900/10 to-neutral-900 absolute inset-0 z-10 h-full w-full">
+                        </div>
+                        <div class="absolute top-0 left-0 w-full h-full">
+                            <div class="w-full h-full" id="video-container">
+                                <!-- Video will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="absolute bottom-6 z-20 flex w-full items-center justify-between gap-2 px-10">
+                            <div class="flex items-center gap-2.5">
+                                <button type="button" id="play-button"
+                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 bg-slate-50 text-slate-900 px-4 xl:px-2 group h-auto rounded py-1.5">
+                                    <i class="fas fa-play mr-5 xl:mr-2"></i>
+                                    Play
+                                </button>
+                                <button type="button" id="fan-theories-button" onclick="showFanTheories()"
+                                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 bg-purple-600 text-white px-4 xl:px-2 group h-auto rounded py-1.5">
+                                    <i class="fas fa-lightbulb mr-5 xl:mr-2"></i>
+                                    Explore Fan Theories
+                                </button>
+                            </div>
+                            <button type="button" id="mute-button"
+                                class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 active:scale-95 text-slate-100 h-auto rounded-full bg-neutral-800 p-1.5 opacity-50 ring-1 ring-slate-400 hover:bg-neutral-800 hover:opacity-100 hover:ring-white">
+                                <i class="fas fa-volume-mute"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class=" h-80">
+                        <div class="grid gap-2.5 px-10 pb-10">
+                            <h2 id="drawer-title"
+                                class="dark:text-slate-50 text-lg font-medium leading-6 text-slate-50 sm:text-xl"></h2>
+                            <div class="flex items-center space-x-2 text-sm sm:text-base">
+                                <p id="drawer-match" class="font-semibold text-green-400"></p>
+                                <p id="drawer-year"></p>
+                                <span id="drawer-language"
+                                    class="grid h-4 w-7 place-items-center text-xs font-bold text-neutral-400 ring-1 ring-neutral-400"></span>
+                            </div>
+                            <p id="drawer-overview"
+                                class="line-clamp-3 text-xs text-slate-50 dark:text-slate-50 sm:text-sm"></p>
+                            <div class="flex items-center gap-2 text-xs sm:text-sm">
+                                <span class="text-slate-600">Genres:</span>
+                                <span id="drawer-genres"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeDrawer()"
+                        class="absolute right-4 top-4 z-20 rounded-full bg-neutral-800 p-1.5 opacity-70 ring-offset-slate-900 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-400">
+                        <i class="fas fa-times"></i>
+                        <span class="sr-only">Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Section -->
+        <div id="search-results" class="search-results hidden">
+            <div class="search-container" id="search-container"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full py-10 text-[#808080] bg-[#141414]">
+        <div class="max-w-[72rem] mx-auto px-4">
+            <div class="flex flex-wrap gap-2 mb-7">
+                <a href="https://facebook.com/netflix" target="_blank" rel="noreferrer"
+                    class="text-[#808080] hover:text-white transition-colors">
+                    <i class="fab fa-facebook-f text-2xl"></i>
+                </a>
+                <a href="https://instagram.com/netflix" target="_blank" rel="noreferrer"
+                    class="text-[#808080] hover:text-white transition-colors">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="https://twitter.com/netflix" target="_blank" rel="noreferrer"
+                    class="text-[#808080] hover:text-white transition-colors">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="https://youtube.com/netflix" target="_blank" rel="noreferrer"
+                    class="text-[#808080] hover:text-white transition-colors">
+                    <i class="fab fa-youtube text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-7">
+                <a href="/help" class="text-sm hover:underline">Help Center</a>
+                <a href="/jobs" class="text-sm hover:underline">Jobs</a>
+                <a href="/terms" class="text-sm hover:underline">Terms of Use</a>
+                <a href="/privacy" class="text-sm hover:underline">Privacy</a>
+                <a href="/cookie-preferences" class="text-sm hover:underline">Cookie Preferences</a>
+                <a href="/corporate-information" class="text-sm hover:underline">Corporate Information</a>
+                <a href="/contact" class="text-sm hover:underline">Contact Us</a>
+                <a href="/speed-test" class="text-sm hover:underline">Speed Test</a>
+                <a href="/legal-notices" class="text-sm hover:underline">Legal Notices</a>
+                <a href="/only-on-netflix" class="text-sm hover:underline">Only on Netflix</a>
+                <a href="/ways-to-watch" class="text-sm hover:underline">Ways to Watch</a>
+                <a href="/account" class="text-sm hover:underline">Account</a>
+            </div>
+
+            <button id="service-code-btn"
+                class="px-3 py-2 border border-[#808080] text-sm hover:text-white transition-colors mb-7">
+                Service Code
+            </button>
+
+            <p class="text-sm">© 2024 Netflix Clone. All rights reserved</p>
+        </div>
+    </footer>
+
+    <!-- Fan Theories Section -->
+    <div id="fan-theories-section" class="fixed inset-0 bg-[#141414] z-[1001] hidden overflow-y-auto">
+        <div class="min-h-screen">
+            <!-- Fan Theories Navigation -->
+            <nav class="fixed top-0 w-full bg-[#141414] shadow-lg z-50 px-12 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+                            alt="Netflix" class="netflix-logo">
+                        <h2 class="text-white text-xl font-medium">Fan Theories</h2>
+                    </div>
+                    <button onclick="closeFanTheories()" class="text-white hover:text-gray-300">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button id="chat-theory-btn" onclick="switchFanTheorySection('chat')"
+                        class="fan-theory-nav-btn bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors">
+                        Chat About Fan Theory
+                    </button>
+                    <button id="view-posters-btn" onclick="switchFanTheorySection('posters')"
+                        class="fan-theory-nav-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-colors">
+                        View Fan Theory Posters
+                    </button>
+                    <button id="my-theory-btn" onclick="switchFanTheorySection('my')"
+                        class="fan-theory-nav-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-colors">
+                        My Fan Theory
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Content sections -->
+            <div class="pt-32 px-12">
+                <!-- Chat Section -->
+                <div id="chat-theory-section" class="theory-section">
+                    <div class="bg-gray-900 rounded-lg p-6">
+                        <h3 class="text-white text-2xl mb-4">Fan Theory Discussions</h3>
+                        <div class="space-y-6">
+                            <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <img src="https://i.pravatar.cc/150?img=1" alt="User avatar"
+                                        class="w-10 h-10 rounded-full mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h4 class="text-white font-medium">ElevenFan</h4>
+                                            <span class="text-gray-400 text-sm">2 days ago</span>
+                                        </div>
+                                        <p class="text-gray-200 mb-4">I believe Eleven is actually connected to the
+                                            Upside Down in a way we haven't seen yet. What if she wasn't just
+                                            experimented on, but was actually born there and brought to our world?</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex space-x-4">
+                                                <button class="reaction-btn" data-reaction="like"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                                    <span class="ml-1 text-gray-400">124</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="heart"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                                    <span class="ml-1 text-gray-400">56</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="laugh"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                                    <span class="ml-1 text-gray-400">17</span>
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button class="upvote-btn" onclick="vote(this, 'up')">
+                                                    <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                                </button>
+                                                <span class="mx-2 text-white">89</span>
+                                                <button class="downvote-btn" onclick="vote(this, 'down')">
+                                                    <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <img src="https://i.pravatar.cc/150?img=2" alt="User avatar"
+                                        class="w-10 h-10 rounded-full mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h4 class="text-white font-medium">StrangerTruths</h4>
+                                            <span class="text-gray-400 text-sm">1 week ago</span>
+                                        </div>
+                                        <p class="text-gray-200 mb-4">The Mind Flayer isn't actually evil. It's a
+                                            hivemind consciousness that's defending itself against what it perceives as
+                                            invaders. It's reacting to human aggression just like any cornered animal
+                                            would.</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex space-x-4">
+                                                <button class="reaction-btn" data-reaction="like"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                                    <span class="ml-1 text-gray-400">78</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="heart"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                                    <span class="ml-1 text-gray-400">42</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="laugh"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                                    <span class="ml-1 text-gray-400">12</span>
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button class="upvote-btn" onclick="vote(this, 'up')">
+                                                    <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                                </button>
+                                                <span class="mx-2 text-white">65</span>
+                                                <button class="downvote-btn" onclick="vote(this, 'down')">
+                                                    <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <img src="https://i.pravatar.cc/150?img=3" alt="User avatar"
+                                        class="w-10 h-10 rounded-full mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h4 class="text-white font-medium">HopperLives</h4>
+                                            <span class="text-gray-400 text-sm">3 days ago</span>
+                                        </div>
+                                        <p class="text-gray-200 mb-4">Hopper is actually the grown-up version of one of
+                                            Dr. Brenner's earlier test subjects. That's why he was so immediately
+                                            protective of Eleven - he recognized what she was going through because he
+                                            lived it.</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex space-x-4">
+                                                <button class="reaction-btn" data-reaction="like"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                                    <span class="ml-1 text-gray-400">203</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="heart"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                                    <span class="ml-1 text-gray-400">117</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="laugh"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                                    <span class="ml-1 text-gray-400">8</span>
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button class="upvote-btn" onclick="vote(this, 'up')">
+                                                    <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                                </button>
+                                                <span class="mx-2 text-white">156</span>
+                                                <button class="downvote-btn" onclick="vote(this, 'down')">
+                                                    <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <img src="https://i.pravatar.cc/150?img=4" alt="User avatar"
+                                        class="w-10 h-10 rounded-full mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h4 class="text-white font-medium">UpsideDownDreamer</h4>
+                                            <span class="text-gray-400 text-sm">5 days ago</span>
+                                        </div>
+                                        <p class="text-gray-200 mb-4">The Upside Down isn't a parallel dimension - it's
+                                            actually Earth's future after some catastrophic event. That's why it looks
+                                            like Hawkins but decayed and lifeless. The "gate" is actually a tear in
+                                            time.</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex space-x-4">
+                                                <button class="reaction-btn" data-reaction="like"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                                    <span class="ml-1 text-gray-400">167</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="heart"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                                    <span class="ml-1 text-gray-400">92</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="laugh"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                                    <span class="ml-1 text-gray-400">14</span>
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button class="upvote-btn" onclick="vote(this, 'up')">
+                                                    <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                                </button>
+                                                <span class="mx-2 text-white">128</span>
+                                                <button class="downvote-btn" onclick="vote(this, 'down')">
+                                                    <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <img src="https://i.pravatar.cc/150?img=5" alt="User avatar"
+                                        class="w-10 h-10 rounded-full mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h4 class="text-white font-medium">DustinTheoryist</h4>
+                                            <span class="text-gray-400 text-sm">1 day ago</span>
+                                        </div>
+                                        <p class="text-gray-200 mb-4">Dustin's curiosity about Dart wasn't just because
+                                            he's scientifically curious. I think he has a deeper connection to the
+                                            Upside Down that we haven't discovered yet - possibly through his birth or
+                                            early childhood.</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex space-x-4">
+                                                <button class="reaction-btn" data-reaction="like"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-thumbs-up text-gray-400 hover:text-blue-400"></i>
+                                                    <span class="ml-1 text-gray-400">87</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="heart"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-heart text-gray-400 hover:text-red-400"></i>
+                                                    <span class="ml-1 text-gray-400">36</span>
+                                                </button>
+                                                <button class="reaction-btn" data-reaction="laugh"
+                                                    onclick="addReaction(this)">
+                                                    <i class="far fa-laugh text-gray-400 hover:text-yellow-400"></i>
+                                                    <span class="ml-1 text-gray-400">23</span>
+                                                </button>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button class="upvote-btn" onclick="vote(this, 'up')">
+                                                    <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                                </button>
+                                                <span class="mx-2 text-white">72</span>
+                                                <button class="downvote-btn" onclick="vote(this, 'down')">
+                                                    <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posters Section -->
+                <div id="view-posters-section" class="theory-section hidden">
+                    <div class="bg-gray-900 rounded-lg p-6">
+                        <h3 class="text-white text-2xl mb-4">Fan Theory Posters</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Added the JPEG images as posters -->
+                            <div class="poster-card bg-black rounded-lg overflow-hidden">
+                                <img src="https://res.cloudinary.com/dvfk4g3wh/image/upload/v1745089486/Dr._Strange_zxcsrq.jpg"
+                                    alt="Dr. Strange Theory" class="w-full h-64 object-cover">
+                                <div class="p-4">
+                                    <h4 class="text-white font-medium text-lg mb-2">Dr. Strange Multiverse Theory</h4>
+                                    <p class="text-gray-300 text-sm mb-3">What if Strange's multiverse jumping created
+                                        permanent tears in reality?</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-400 text-xs">Posted by MarvelFan</span>
+                                        <div class="flex space-x-2">
+                                            <button class="text-gray-400 hover:text-red-500">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-500">
+                                                <i class="far fa-bookmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="poster-card bg-black rounded-lg overflow-hidden">
+                                <img src="https://res.cloudinary.com/dvfk4g3wh/image/upload/v1745089486/Harry_dlv05f.jpg"
+                                    alt="Harry Potter Theory" class="w-full h-64 object-cover">
+                                <div class="p-4">
+                                    <h4 class="text-white font-medium text-lg mb-2">Harry Potter: The Eighth Horcrux
+                                    </h4>
+                                    <p class="text-gray-300 text-sm mb-3">Could there be an eighth horcrux that was
+                                        never discovered?</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-400 text-xs">Posted by WizardingExpert</span>
+                                        <div class="flex space-x-2">
+                                            <button class="text-gray-400 hover:text-red-500">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-500">
+                                                <i class="far fa-bookmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="poster-card bg-black rounded-lg overflow-hidden">
+                                <img src="https://res.cloudinary.com/dvfk4g3wh/image/upload/v1745089487/scarlet_witch_strange_nightmares_hpzydp.jpg"
+                                    alt="Scarlet Witch Theory" class="w-full h-64 object-cover">
+                                <div class="p-4">
+                                    <h4 class="text-white font-medium text-lg mb-2">Wanda's Reality Manipulation</h4>
+                                    <p class="text-gray-300 text-sm mb-3">Is Wanda's power actually reshaping the MCU
+                                        timeline across multiple shows?</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-400 text-xs">Posted by ScarletFanatic</span>
+                                        <div class="flex space-x-2">
+                                            <button class="text-gray-400 hover:text-red-500">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-500">
+                                                <i class="far fa-bookmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Theory Section - Improved UI -->
+                <div id="my-theory-section" class="theory-section hidden">
+                    <div class="bg-gray-900 rounded-lg p-6">
+                        <h3 class="text-white text-2xl mb-6">Create Your Fan Theory</h3>
+
+                        <div class="my-theory-form bg-gray-800 rounded-lg p-6 mb-8 shadow-xl">
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <!-- Left column -->
+                                <div class="flex-1">
+                                    <div class="mb-6">
+                                        <label for="theory-title"
+                                            class="block text-white text-sm font-medium mb-2">Theory Title</label>
+                                        <input type="text" id="theory-title"
+                                            placeholder="Enter a catchy title for your theory"
+                                            class="w-full bg-gray-700 border border-gray-600 rounded-md py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label for="theory-content"
+                                            class="block text-white text-sm font-medium mb-2">Your Theory</label>
+                                        <textarea id="theory-content" rows="6"
+                                            placeholder="Explain your fan theory in detail..."
+                                            class="w-full bg-gray-700 border border-gray-600 rounded-md py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"></textarea>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label for="theory-tags" class="block text-white text-sm font-medium mb-2">Tags
+                                            (separate with commas)</label>
+                                        <input type="text" id="theory-tags"
+                                            placeholder="stranger things, hawkins, upside down"
+                                            class="w-full bg-gray-700 border border-gray-600 rounded-md py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                                    </div>
+                                </div>
+
+                                <!-- Right column -->
+                                <div class="flex-1">
+                                    <label class="block text-white text-sm font-medium mb-2">Add Image
+                                        (Optional)</label>
+                                    <div class="flex flex-col">
+                                        <label for="theory-image"
+                                            class="flex items-center justify-center w-full h-[190px] border-2 border-dashed border-gray-500 rounded-lg cursor-pointer hover:border-red-500 transition-colors mb-4">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-3"></i>
+                                                <span class="text-sm text-gray-300 font-medium">Drag & drop an image or
+                                                    click to browse</span>
+                                                <span class="text-xs text-gray-400 mt-2">Supported formats: JPEG, PNG,
+                                                    GIF</span>
+                                            </div>
+                                            <input id="theory-image" type="file" accept="image/*" class="hidden">
+                                        </label>
+                                        <div id="image-preview"
+                                            class="hidden relative w-full h-[190px] bg-gray-800 rounded-lg overflow-hidden">
+                                            <img id="preview-img" src="" alt="Preview"
+                                                class="w-full h-full object-contain">
+                                            <div
+                                                class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button type="button" id="remove-image"
+                                                    class="bg-red-600 text-white rounded-full p-2 transform hover:scale-110 transition-transform">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end mt-6">
+                                <button type="button" onclick="submitTheory()"
+                                    class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-8 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all transform hover:scale-105">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    Post Your Theory
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="my-theories-container">
+                            <div class="flex items-center justify-between mb-6">
+                                <h4 class="text-white text-xl font-medium">Your Theories</h4>
+                                <div class="flex gap-3">
+                                    <button
+                                        class="bg-gray-700 hover:bg-gray-600 text-white text-sm py-2 px-4 rounded-md transition-colors">
+                                        <i class="fas fa-sort mr-2"></i>
+                                        Sort by Latest
+                                    </button>
+                                    <button
+                                        class="bg-gray-700 hover:bg-gray-600 text-white text-sm py-2 px-4 rounded-md transition-colors">
+                                        <i class="fas fa-filter mr-2"></i>
+                                        Filter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6" id="user-theories">
+                                <div class="bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h5 class="text-white text-lg font-medium">Hawkins Lab Connection to Area 51
+                                        </h5>
+                                        <span class="text-gray-400 text-xs">3 weeks ago</span>
+                                    </div>
+                                    <p class="text-gray-300 text-base mb-4 leading-relaxed">I think Hawkins Lab was just
+                                        one of many government facilities, with Area 51 being the main headquarters
+                                        where they first discovered the Upside Down.</p>
+                                    <div class="flex flex-wrap gap-2 mt-4 mb-4">
+                                        <span
+                                            class="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">#strangerthings</span>
+                                        <span
+                                            class="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">#area51</span>
+                                        <span
+                                            class="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">#government</span>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+                                        <div class="flex items-center gap-3">
+                                            <button
+                                                class="flex items-center gap-1 text-gray-400 hover:text-blue-400 transition-colors">
+                                                <i class="far fa-eye"></i>
+                                                <span class="text-xs">42 views</span>
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-1 text-gray-400 hover:text-red-400 transition-colors">
+                                                <i class="far fa-heart"></i>
+                                                <span class="text-xs">12 likes</span>
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-1 text-gray-400 hover:text-green-400 transition-colors">
+                                                <i class="far fa-comment"></i>
+                                                <span class="text-xs">5 comments</span>
+                                            </button>
+                                        </div>
+                                        <div class="flex space-x-3">
+                                            <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-red-400 transition-colors">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <!-- Existing content here -->
+    </div>
+
+    <!-- Profile Management Screens -->
+    <div id="profile-management-screen" class="min-h-screen bg-black py-10 hidden">
+        <div id="profile-management-content" class="container mx-auto"></div>
+    </div>
+
+    <!-- Add Profile Screen -->
+    <div id="add-profile-screen" class="min-h-screen bg-black py-10 hidden">
+        <div class="container flex min-h-screen w-full max-w-2xl flex-col justify-center gap-3 mx-auto">
+            <!-- Add Profile Main Form -->
+            <div id="add-profile-main-form" class="opacity-100 transform-none">
+                <div class="space-y-3">
+                    <h1 class="text-3xl font-medium sm:text-5xl text-[#f8fafc]">Add Profile</h1>
+                    <p class="text-sm text-neutral-500 sm:text-base">Add a profile for another person watching Netflix.
+                    </p>
+                </div>
+                <div class="shrink-0 h-[1px] w-full bg-neutral-700"></div>
+                <form class="mt-2 grid w-full gap-5">
+                    <div class="flex w-full flex-col gap-6 sm:flex-row sm:items-center">
+                        <button onclick="toggleAddProfileAvatarPicker()" type="button"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-24 w-fit overflow-hidden rounded p-0 hover:opacity-80 active:scale-90 sm:h-28 md:h-32">
+                            <img id="add-profile-avatar-preview" alt="Profile icon"
+                                class="object-cover absolute h-full w-full inset-0 bg-transparent"
+                                src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/jsnafhixioxnblla2b1n.webp" />
+                        </button>
+                        <fieldset class="grid w-full flex-1 items-start gap-2">
+                            <label class="sr-only">Name</label>
+                            <input id="add-profile-name"
+                                class="flex h-10 w-full border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white"
+                                placeholder="Name" type="text" name="name" />
+                        </fieldset>
+                    </div>
+                    <div class="shrink-0 h-[1px] w-full my-1 bg-neutral-700"></div>
+                    <div class="mt-2 flex flex-wrap items-center gap-4">
+                        <button type="button" onclick="saveNewProfile()"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 rounded-none bg-slate-50 text-slate-900 hover:bg-red-600 hover:text-slate-100 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-red-600 dark:hover:text-slate-100 px-4 py-2">
+                            Continue
+                        </button>
+                        <button type="button" onclick="exitProfileManagement()"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 border border-slate-700 bg-transparent text-slate-100 hover:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 h-10 px-4 py-2 rounded-none">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Add Profile Avatar Picker -->
+            <div class="sticky top-0 z-40 w-full pb-5 pt-20 bg-transparent">
+                <div class="container flex w-full max-w-screen-2xl flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <button type="button" onclick="toggleAddProfileAvatarPicker()"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 bg-transparent text-slate-100 hover:text-slate-100 data-[state=open]:bg-transparent dark:text-slate-100 dark:hover:text-slate-100 dark:data-[state=open]:bg-transparent h-auto rounded p-0 hover:bg-transparent dark:hover:bg-transparent">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m12 19-7-7 7-7"></path>
+                                <path d="M19 12H5"></path>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1 class="text-2xl font-medium sm:text-3xl">Edit Profile</h1>
+                            <h2 class="text-xl font-medium sm:text-2xl">Choose a profile icon.</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container flex w-full max-w-screen-2xl flex-col gap-2.5">
+                <div class="text-xl font-medium sm:text-2xl">The Classics</div>
+                <div class="flex items-center gap-2.5 overflow-x-auto py-1.5 sm:gap-5">
+                    <button type="button"
+                        onclick="selectAddProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/jsnafhixioxnblla2b1n.webp')"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90">
+                        <img alt="Classic profile icon (blue)"
+                            class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/jsnafhixioxnblla2b1n.webp" />
+                    </button>
+                    <button type="button"
+                        onclick="selectAddProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/rurejglihshkvaqphnyj.webp')"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90">
+                        <img alt="Classic profile icon (violet)"
+                            class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/rurejglihshkvaqphnyj.webp" />
+                    </button>
+                    <button type="button"
+                        onclick="selectAddProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp')"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90">
+                        <img alt="Classic profile icon (red)" class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp" />
+                    </button>
+                    <button type="button"
+                        onclick="selectAddProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/r92ukp8w9fgpmbmol2me.webp')"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90">
+                        <img alt="Classic profile icon (green)"
+                            class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/r92ukp8w9fgpmbmol2me.webp" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Update Profile Screen -->
+    <div id="update-profile-screen" class="min-h-screen bg-black py-10 hidden">
+        <input type="hidden" id="update-profile-id">
+
+        <div id="update-profile-main-form"
+            class="container w-full max-w-3xl flex-col justify-center gap-5 pb-5 pt-16 mx-auto">
+            <h1 class="text-3xl font-medium sm:text-5xl text-white">Edit Profile</h1>
+            <div class="shrink-0 h-[1px] w-full bg-neutral-700 my-4"></div>
+            <div class="mt-2 grid w-full gap-5">
+                <div class="flex w-full flex-col gap-6 sm:flex-row">
+                    <button onclick="toggleUpdateProfileAvatarPicker()"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-24 w-fit overflow-hidden rounded p-0 hover:opacity-80 active:scale-90 sm:h-28 md:h-32"
+                        type="button">
+                        <img id="update-profile-avatar-preview" alt="Profile icon"
+                            class="object-cover absolute h-full w-full inset-0 bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp" />
+                    </button>
+                    <div class="w-full flex-1 space-y-5">
+                        <div class="grid w-full items-start gap-2">
+                            <label class="sr-only">Name</label>
+                            <input
+                                class="flex h-10 w-full border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white"
+                                id="update-profile-name" placeholder="Name" type="text" name="name" />
+                        </div>
+                        <div class="grid w-full items-start gap-2">
+                            <label class="text-base text-neutral-400 sm:text-lg">Language:</label>
+                            <select
+                                class="border border-slate-300 px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white bg-[#171717]">
+                                <option value="ENGLISH">English</option>
+                                <option value="HINDI">Hindi</option>
+                                <option value="ESPANOL">Español</option>
+                                <option value="FRANCAIS">Français</option>
+                            </select>
+                        </div>
+                        <div class="grid w-full items-start gap-3.5">
+                            <label class="flex flex-col gap-2">
+                                <span class="text-base text-neutral-400 sm:text-lg">Game Handle:</span>
+                                <span class="text-white">Your handle is a unique name that'll be used for playing with
+                                    other Netflix members across all Netflix Games.</span>
+                            </label>
+                            <input
+                                class="flex h-10 w-full border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white"
+                                id="update-profile-game-handle" placeholder="Create Game Handle" type="text"
+                                name="gameHandle" />
+                        </div>
+                    </div>
+                </div>
+                <div class="shrink-0 h-[1px] w-full my-2 bg-neutral-700"></div>
+                <div class="mt-2 flex flex-wrap items-center gap-4">
+                    <button type="button" onclick="updateProfile()"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 rounded-none bg-slate-50 text-slate-900 hover:bg-red-600 hover:text-slate-100 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-red-600 dark:hover:text-slate-100 px-4 py-2">
+                        Save
+                    </button>
+                    <button onclick="exitProfileManagement()"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 border border-slate-700 bg-transparent text-slate-100 hover:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 h-10 px-4 py-2 rounded-none"
+                        type="button">
+                        Cancel
+                    </button>
+                    <button onclick="deleteProfile()"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 border border-slate-700 bg-transparent text-slate-100 hover:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 h-10 px-4 py-2 rounded-none"
+                        type="button">
+                        Delete Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Picker -->
+        <div id="update-profile-avatar-picker" class=" w-full flex-col gap-6 text-white">
+            <div class="sticky top-0 z-40 w-full pb-5 pt-20 bg-transparent">
+                <div class="container flex w-full max-w-screen-2xl flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <button type="button"
+                            class="inline-flex items-center justify-center text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 bg-transparent text-slate-100 hover:text-slate-100 h-auto rounded p-0 hover:bg-transparent"
+                            onclick="toggleUpdateProfileAvatarPicker()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-arrow-left">
+                                <path d="m12 19-7-7 7-7"></path>
+                                <path d="M19 12H5"></path>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1 class="text-2xl font-medium sm:text-3xl">Edit Profile</h1>
+                            <h2 class="text-xl font-medium sm:text-2xl">Choose a profile icon.</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container flex w-full max-w-screen-2xl flex-col gap-2.5">
+                <div class="text-xl font-medium sm:text-2xl">The Classics</div>
+                <div class="flex items-center gap-2.5 overflow-x-auto py-1.5 sm:gap-5">
+                    <button type="button"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90"
+                        onclick="selectUpdateProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp')">
+                        <img alt="Classic profile icon (red)" class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp" />
+                    </button>
+                    <button type="button"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90"
+                        onclick="selectUpdateProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/r92ukp8w9fgpmbmol2me.webp')">
+                        <img alt="Classic profile icon (green)"
+                            class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/r92ukp8w9fgpmbmol2me.webp" />
+                    </button>
+                    <button type="button"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-auto w-32 min-w-[80px] overflow-hidden rounded p-0 hover:opacity-80 active:scale-90"
+                        onclick="selectUpdateProfileAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057684/netflx-web/w3ct3bv3nch7xbcsffgi.webp')">
+                        <img alt="Classic profile icon (yellow)"
+                            class="object-cover absolute h-full w-full bg-transparent"
+                            src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057684/netflx-web/w3ct3bv3nch7xbcsffgi.webp" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Profile Management Screens -->
+
+    <!-- Profile Management Modal -->
+    <div id="profile-management-modal" class="fixed inset-0 z-[1001] hidden bg-black">
+        <div class="min-h-screen flex flex-col items-center justify-center">
+            <div class="text-[#f8fafc] text-4xl font-medium flex flex-col items-center gap-8 relative">
+                Manage Profiles:
+                <div class="flex flex-wrap items-start justify-center gap-2 pb-8 sm:gap-4 md:gap-8">
+                    <!-- Add Profile Button -->
+                    <button onclick="openAddProfile()" type="button"
+                        class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-slate-400 disabled:pointer-events-none disabled:opacity-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 bg-transparent text-slate-100 hover:text-slate-100 data-[state=open]:bg-transparent dark:text-slate-100 dark:hover:text-slate-100 dark:data-[state=open]:bg-transparent group h-auto flex-col space-y-2 p-0 hover:bg-transparent focus:ring-0 focus:ring-offset-0 active:scale-[0.98] dark:hover:bg-transparent">
+                        <div
+                            class="relative aspect-square h-24 w-fit overflow-hidden rounded shadow-sm group-hover:ring-2 group-hover:ring-slate-500 sm:h-28 md:h-32">
+                            <div class="absolute inset-0 h-full w-full bg-neutral-800/50"></div>
+                            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-plus-circle">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M8 12h8"></path>
+                                    <path d="M12 8v8"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center gap-5">
+                            <h2 class="text-sm text-slate-400 group-hover:text-slate-50 sm:text-base">Add Profile</h2>
+                        </div>
+                    </button>
+
+                    <!-- Profile Cards will be dynamically added here -->
+                </div>
+                <button type="button" onclick="closeProfileManagement()"
+                    class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 rounded-none bg-slate-50 text-slate-900 hover:bg-red-600 hover:text-slate-100 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-red-600 dark:hover:text-slate-100 px-4 py-2">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update/Add Profile Modal -->
+    <div id="update-profile-modal" class="fixed inset-0 z-[1001] hidden bg-black">
+        <div class="min-h-screen flex flex-col items-center justify-center">
+            <div class="container w-full max-w-3xl flex-col justify-center gap-5 pb-5 pt-16 mx-auto">
+                <h1 id="update-profile-title" class="text-3xl font-medium sm:text-5xl text-[#f8fafc]">Edit Profile</h1>
+                <div class="shrink-0 h-[1px] w-full bg-neutral-700 my-4"></div>
+                <div class="mt-2 grid w-full gap-5">
+                    <div class="flex w-full flex-col gap-6 sm:flex-row">
+                        <button onclick="toggleUpdateProfileAvatarPicker()" type="button"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:bg-slate-800 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 bg-slate-50 text-slate-900 dark:bg-slate-50 dark:text-slate-900 relative aspect-square h-24 w-fit overflow-hidden rounded p-0 hover:opacity-80 active:scale-90 sm:h-28 md:h-32">
+                            <input type="hidden" id="update-profile-id">
+                            <img id="update-profile-avatar-preview" alt="Profile icon"
+                                class="object-cover absolute h-full w-full inset-0 bg-transparent"
+                                src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp" />
+                        </button>
+                        <div class="w-full flex-1 space-y-5">
+                            <div class="grid w-full items-start gap-2">
+                                <label class="sr-only">Name</label>
+                                <input id="update-profile-name" placeholder="Name" type="text" name="name"
+                                    class="flex h-10 w-full border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white" />
+                            </div>
+                            <div class="grid w-full items-start gap-2">
+                                <label class="text-base text-neutral-400 sm:text-lg">Language:</label>
+                                <select
+                                    class="border border-slate-300 px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white bg-[#171717]">
+                                    <option value="ENGLISH">English</option>
+                                    <option value="HINDI">Hindi</option>
+                                    <option value="ESPANOL">Español</option>
+                                    <option value="FRANCAIS">Français</option>
+                                </select>
+                            </div>
+                            <div class="grid w-full items-start gap-3.5">
+                                <label class="flex flex-col gap-2">
+                                    <span class="text-base text-neutral-400 sm:text-lg">Game Handle:</span>
+                                    <span class="text-white">Your handle is a unique name that'll be used for playing
+                                        with other Netflix members across all Netflix Games.</span>
+                                </label>
+                                <input id="update-profile-game-handle" placeholder="Create Game Handle" type="text"
+                                    name="gameHandle"
+                                    class="flex h-10 w-full border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 rounded-none text-white" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shrink-0 h-[1px] w-full my-2 bg-neutral-700"></div>
+                    <div class="mt-2 flex flex-wrap items-center gap-4">
+                        <button type="button" onclick="saveProfile()"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 rounded-none bg-slate-50 text-slate-900 hover:bg-red-600 hover:text-slate-100 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-red-600 dark:hover:text-slate-100 px-4 py-2">
+                            Save
+                        </button>
+                        <button type="button" onclick="closeProfileModal()"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 border border-slate-700 bg-transparent text-slate-100 hover:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 h-10 px-4 py-2 rounded-none">
+                            Cancel
+                        </button>
+                        <button id="delete-profile-btn" type="button" onclick="deleteProfile()"
+                            class="inline-flex items-center justify-center text-sm font-medium ring-offset-slate-900 transition-colors hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800 border border-slate-700 bg-transparent text-slate-100 hover:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 h-10 px-4 py-2 rounded-none">
+                            Delete Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Picker Modal -->
+        <div id="avatar-picker-modal" class="fixed inset-0 z-[1002] hidden bg-black">
+            <div class="min-h-screen flex flex-col">
+                <div class="sticky top-0 z-40 w-full pb-5 pt-20 bg-transparent">
+                    <div class="container flex w-full max-w-screen-2xl flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5">
+                            <button type="button" onclick="closeAvatarPicker()"
+                                class="inline-flex items-center justify-center text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 active:scale-95 bg-transparent text-slate-100 hover:text-slate-100 h-auto rounded p-0 hover:bg-transparent">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="m12 19-7-7 7-7"></path>
+                                    <path d="M19 12H5"></path>
+                                </svg>
+                            </button>
+                            <div>
+                                <h1 class="text-2xl font-medium sm:text-3xl text-[#f8fafc]">Edit Profile</h1>
+                                <h2 class="text-xl font-medium sm:text-2xl text-[#f8fafc]">Choose a profile icon.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container flex w-full max-w-screen-2xl flex-col gap-2.5 px-8">
+                    <div class="text-xl font-medium sm:text-2xl text-[#f8fafc]">The Classics</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                        <button type="button"
+                            onclick="selectAvatar('https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp')"
+                            class="aspect-square rounded overflow-hidden hover:ring-2 hover:ring-slate-500 transition-all">
+                            <img src="https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp"
+                                alt="Classic profile icon (red)" class="w-full h-full object-cover" />
+                        </button>
+                        <!-- Add more avatar options as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Global variables
+            const TMDB_API_KEY = 'b5567485072637e740f970c66c1c9c8c';
+            const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+            const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/original';
+            let currentBannerId = null;
+            let searchTimeout = null;
+
+            // Replace the existing API key declaration with your valid key
+            const GEMINI_API_KEY = "AIzaSyDg__qJ0PIQfRL4kzPnmTv4ETqaRD5tcAk"; // Get this from Google Cloud Console
+
+            const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+            // DOM elements - will be initialized after DOM loads
+            let searchBar;
+            let searchIcon;
+            let searchResultsDiv;
+            let searchContainer;
+            let bannerElement;
+            let moviesSection;
+
+            // Initialize DOM elements
+            function initializeDOMElements() {
+                searchBar = document.querySelector('.search-bar');
+                searchIcon = document.querySelector('.fa-search');
+                searchResultsDiv = document.getElementById('search-results');
+                searchContainer = document.getElementById('search-container');
+                bannerElement = document.getElementById('banner');
+                moviesSection = document.getElementById('movies-section');
+
+                if (!searchBar || !searchIcon || !searchResultsDiv || !searchContainer) {
+                    console.error('Some DOM elements could not be found');
+                    return false;
+                }
+                return true;
+            }
+
+            // Handle navbar background on scroll
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 100) {
+                    navbar.style.backgroundColor = '#141414';
+                } else {
+                    navbar.style.backgroundColor = 'transparent';
+                }
+            });
+
+            // Initialize everything when DOM is loaded
+            document.addEventListener('DOMContentLoaded', () => {
+                initializeDOMElements();
+                loadBanner();
+                loadMovieCategories();
+                initializeSearch();
+
+                // Set up image preview functionality
+                const imageInput = document.getElementById('theory-image');
+                const imagePreview = document.getElementById('image-preview');
+                const previewImg = document.getElementById('preview-img');
+                const removeButton = document.getElementById('remove-image');
+
+                if (imageInput && imagePreview && previewImg && removeButton) {
+                    imageInput.addEventListener('change', function () {
+                        if (this.files && this.files[0]) {
+                            const reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                previewImg.src = e.target.result;
+                                imagePreview.classList.remove('hidden');
+                            }
+
+                            reader.readAsDataURL(this.files[0]);
+                        }
+                    });
+
+                    removeButton.addEventListener('click', function () {
+                        imageInput.value = '';
+                        imagePreview.classList.add('hidden');
+                    });
+                }
+
+                // Remove onclick attributes and directly add event listeners to all fan theory buttons
+                const chatBtn = document.getElementById('chat-theory-btn');
+                const postersBtn = document.getElementById('view-posters-btn');
+                const myTheoryBtn = document.getElementById('my-theory-btn');
+
+                if (chatBtn) {
+                    chatBtn.removeAttribute('onclick');
+                    chatBtn.addEventListener('click', function () {
+                        switchFanTheorySection('chat');
+                    });
+                }
+
+                if (postersBtn) {
+                    postersBtn.removeAttribute('onclick');
+                    postersBtn.addEventListener('click', function () {
+                        switchFanTheorySection('posters');
+                    });
+                }
+
+                if (myTheoryBtn) {
+                    myTheoryBtn.removeAttribute('onclick');
+                    myTheoryBtn.addEventListener('click', function () {
+                        switchFanTheorySection('my');
+                    });
+                }
+
+                // Add profile button click handler
+                const profileButton = document.querySelector('#profile-button button');
+                if (profileButton) {
+                    profileButton.addEventListener('click', toggleProfileMenu);
+                }
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    const menu = document.getElementById('profile-menu');
+                    const profileButton = document.getElementById('profile-button');
+
+                    if (menu && !menu.classList.contains('hidden') && !profileButton.contains(e.target)) {
+                        menu.classList.add('hidden');
+                        menu.classList.remove('animate-in', 'slide-in-from-top-2');
+                    }
+                });
+
+                // Initialize profile menu
+                initializeProfileMenu();
+            });
+
+            // Load banner content
+            async function loadBanner() {
+                try {
+                    const response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=' + TMDB_API_KEY);
+                    const data = await response.json();
+                    const movie = data.results[Math.floor(Math.random() * data.results.length)];
+
+                    currentBannerId = movie.id; // Store the current banner movie ID
+
+                    document.getElementById('banner-bg').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
+                    document.getElementById('banner-title').textContent = movie.title || movie.name;
+                    document.getElementById('banner-overview').textContent = movie.overview;
+                    document.getElementById('banner-release').textContent = (movie.release_date || movie.first_air_date).split('-')[0];
+                    document.getElementById('banner-match').textContent = Math.floor(movie.vote_average * 10) + '% Match';
+                } catch (error) {
+                    console.error('Error loading banner:', error);
+                }
+            }
+
+            // Load movie categories
+            async function loadMovieCategories() {
+                const categories = [
+                    { title: 'Trending Now', endpoint: '/trending/all/week' },
+                    { title: 'Popular on Netflix', endpoint: '/movie/popular' },
+                    { title: 'New Releases', endpoint: '/movie/now_playing' },
+                    { title: 'Top Rated', endpoint: '/movie/top_rated' },
+                    { title: 'Action Thrillers', endpoint: '/discover/movie', genre: 28 },
+                    { title: 'Drama Movies', endpoint: '/discover/movie', genre: 18 }
+                ];
+
+                const moviesSection = document.getElementById('movies-section');
+
+                for (const category of categories) {
+                    try {
+                        const url = `${TMDB_BASE_URL}${category.endpoint}?api_key=${TMDB_API_KEY}${category.genre ? '&with_genres=' + category.genre : ''}`;
+                        const response = await fetch(url);
+                        const data = await response.json();
+
+                        const rowHTML = `
+                        <div class="movie-category px-12 ">
+                            <h2 class="category-title">${category.title}</h2>
+                            <div class="movie-row flex space-x-2">
+                                ${data.results.map(movie => `
+                                    <div class="movie-card flex-none w-[250px]" onclick="showMovieDetails(${movie.id})">
+                                        <img src="${TMDB_IMAGE_BASE_URL}${movie.poster_path}" 
+                                             class="w-full rounded-sm" alt="${movie.title || movie.name}">
+                                        <div class="movie-info">
+                                            <h3 class="text-sm font-medium">${movie.title || movie.name}</h3>
+                                            <div class="flex items-center mt-1">
+                                                <span class="match-score">${Math.round(movie.vote_average * 10)}% Match</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+
+                        moviesSection.innerHTML += rowHTML;
+                    } catch (error) {
+                        console.error(`Error loading ${category.title}:`, error);
+                    }
+                }
+            }
+
+            // Search functionality
+            function initializeSearch() {
+                if (!initializeDOMElements()) return;
+
+                searchIcon.addEventListener('click', () => {
+                    searchBar.classList.toggle('hidden');
+                    if (!searchBar.classList.contains('hidden')) {
+                        searchBar.focus();
+                    }
+                });
+
+                searchBar.addEventListener('input', handleSearch);
+                searchBar.addEventListener('blur', handleSearchBlur);
+                document.addEventListener('keydown', handleEscapeKey);
+            }
+
+            async function handleSearch(e) {
+                if (!searchResultsDiv || !bannerElement || !moviesSection) return;
+
+                const query = e.target.value.trim();
+
+                if (query.length > 0) {
+                    searchResultsDiv.classList.remove('hidden');
+                    if (bannerElement) bannerElement.style.visibility = 'hidden';
+                    if (moviesSection) moviesSection.style.visibility = 'hidden';
+                } else {
+                    searchResultsDiv.classList.add('hidden');
+                    if (bannerElement) bannerElement.style.visibility = 'visible';
+                    if (moviesSection) moviesSection.style.visibility = 'visible';
+                    return;
+                }
+
+                if (query.length < 3) return;
+
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
+
+                searchTimeout = setTimeout(async () => {
+                    try {
+                        const response = await fetch(
+                            `${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`
+                        );
+                        const data = await response.json();
+
+                        if (!searchContainer) return;
+
+                        const validResults = data.results.filter(item => item.backdrop_path);
+
+                        if (validResults.length > 0) {
+                            const searchHTML = validResults.map(movie => `
+                            <div class="search-card" onclick="showMovieDetails(${movie.id})">
+                                <img 
+                                    src="https://image.tmdb.org/t/p/w500${movie.backdrop_path}"
+                                    alt="${movie.title || movie.name}"
+                                    class="m-1 hover:scale-110 transition duration-150 ease-out w-full h-full object-cover"
+                                    loading="lazy"
+                                >
+                            </div>
+                        `).join('');
+
+                            searchContainer.innerHTML = searchHTML;
+                        } else {
+                            searchContainer.innerHTML = '<div class="text-center text-white text-xl col-span-full">No results found</div>';
+                        }
+                    } catch (error) {
+                        console.error('Error searching:', error);
+                        if (searchContainer) {
+                            searchContainer.innerHTML = '<div class="text-center text-white text-xl col-span-full">Error loading results</div>';
+                        }
+                    }
+                }, 500);
+            }
+
+            function handleSearchBlur() {
+                if (!searchBar || !searchResultsDiv || !bannerElement || !moviesSection) return;
+
+                if (searchBar.value.trim() === '') {
+                    searchResultsDiv.classList.add('hidden');
+                    bannerElement.style.visibility = 'visible';
+                    moviesSection.style.visibility = 'visible';
+                    searchBar.classList.add('hidden');
+                }
+            }
+
+            function handleEscapeKey(e) {
+                if (!searchBar || !searchResultsDiv || !bannerElement || !moviesSection) return;
+
+                if (e.key === 'Escape') {
+                    searchBar.value = '';
+                    searchResultsDiv.classList.add('hidden');
+                    bannerElement.style.visibility = 'visible';
+                    moviesSection.style.visibility = 'visible';
+                    searchBar.classList.add('hidden');
+                }
+            }
+
+            // Update the drawer show/hide functions
+            function showDrawer() {
+                const drawer = document.getElementById('movie-drawer');
+                drawer.classList.remove('hidden');
+                drawer.classList.add('block');
+            }
+
+            function closeDrawer() {
+                const drawer = document.getElementById('movie-drawer');
+                drawer.classList.remove('block');
+                drawer.classList.add('hidden');
+                const videoContainer = document.getElementById('video-container');
+                if (videoContainer) {
+                    videoContainer.innerHTML = '';
+                }
+            }
+
+            // Update showMovieDetails function
+            async function showMovieDetails(movieId) {
+                try {
+                    // First get media type (movie or TV)
+                    const typeResponse = await fetch(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}`);
+                    let mediaType = 'movie';
+                    if (!typeResponse.ok) {
+                        mediaType = 'tv'; // Fallback to TV if movie endpoint fails
+                    }
+
+                    const [movieResponse, videoResponse] = await Promise.all([
+                        fetch(`${TMDB_BASE_URL}/${mediaType}/${movieId}?api_key=${TMDB_API_KEY}`),
+                        fetch(`${TMDB_BASE_URL}/${mediaType}/${movieId}/videos?api_key=${TMDB_API_KEY}`)
+                    ]);
+
+                    if (!movieResponse.ok) throw new Error('Movie not found');
+                    const movie = await movieResponse.json();
+                    const videoData = await videoResponse.json().catch(_ => ({ results: [] })); // Fallback handling
+
+                    // Restore video player logic
+                    const videoContainer = document.getElementById('video-container');
+                    if (videoData.results?.length > 0) {
+                        const trailer = videoData.results.find(v => v.type === "Trailer") || videoData.results[0];
+                        videoContainer.innerHTML = `
+                            <iframe 
+                                width="100%" 
+                                height="100%"
+                                src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        `;
+                    }
+
+                    // Generate fan theory using Gemini
+                    const fanTheory = await generateFanTheory(movie);
+
+                    // Update drawer content
+                    showDrawer();
+                    document.getElementById('drawer-title').textContent = movie.title || '';
+                    document.getElementById('drawer-match').textContent = Math.floor((movie.vote_average || 0) * 10) + '% Match';
+                    document.getElementById('drawer-year').textContent = (movie.release_date || '').split('-')[0];
+                    document.getElementById('drawer-language').textContent = (movie.original_language || '').toUpperCase();
+                    document.getElementById('drawer-overview').textContent = movie.overview || '';
+                    document.getElementById('drawer-genres').textContent = movie.genres ? movie.genres.map(g => g.name).join(', ') : '';
+
+                    // Add generated theory to discussions
+                    addGeneratedTheoryToUI(movie, fanTheory);
+
+                } catch (error) {
+                    console.error('Error loading movie details:', error);
+                    // Show error in drawer instead of closing it
+                    const drawer = document.getElementById('movie-drawer');
+                    if (drawer) {
+                        drawer.classList.remove('hidden');
+                        drawer.classList.add('block');
+                        document.getElementById('drawer-title').textContent = 'Error';
+                        document.getElementById('drawer-overview').textContent = 'Failed to load movie details';
+                    }
+                }
+            }
+
+            // Gemini API interaction function
+            async function generateFanTheory(movie) {
+                try {
+                    const prompt = `Generate a creative fan theory for ${movie.title}. Focus on: ${movie.overview?.substring(0, 200) || 'popular elements'}. Keep it 2 paragraphs.`;
+
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{ text: prompt }]
+                            }],
+                            safetySettings: [{
+                                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                                threshold: "BLOCK_ONLY_HIGH"
+                            }],
+                            generationConfig: {
+                                temperature: 0.9,
+                                topK: 40,
+                                topP: 0.95
+                            }
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('API request failed');
+                    const data = await response.json();
+                    return data.candidates[0].content.parts[0].text;
+                } catch (error) {
+                    console.error('Theory Generation Error:', error);
+                    return "Couldn't generate theories at the moment. Please try again later.";
+                }
+            }
+
+            // Helper function to get random theme
+            function getRandomTheme(genres) {
+                const themes = {
+                    14: "fantasy elements", 16: "animation style",
+                    878: "sci-fi concepts", 9648: "mystery aspects",
+                    53: "thriller elements", 18: "dramatic relationships"
+                };
+
+                const genreThemes = genres?.map(g => themes[g.id]) || [];
+                return genreThemes.length > 0
+                    ? genreThemes[0]
+                    : ["hidden symbolism", "character motivations", "unresolved plot points"][Math.floor(Math.random() * 3)];
+            }
+
+            // Function to add generated theory to UI
+            function addGeneratedTheoryToUI(movie, theoryText) {
+                const theoriesContainer = document.querySelector('#chat-theory-section .space-y-6');
+
+                const theoryElement = document.createElement('div');
+                theoryElement.className = 'fan-theory-post bg-gray-800 rounded-lg p-4';
+                theoryElement.innerHTML = `
+                    <div class="flex items-start">
+                        <img src="https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 10)}" 
+                             alt="User avatar" class="w-10 h-10 rounded-full mr-3">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="text-white font-medium">${movie.title} Theorist</h4>
+                                <span class="text-gray-400 text-sm">Just now</span>
+                            </div>
+                            <p class="text-gray-200 mb-4">${theoryText}</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex space-x-4">
+                                    ${generateRandomReactions()}
+                                </div>
+                                <div class="flex items-center">
+                                    <button class="upvote-btn" onclick="vote(this, 'up')">
+                                        <i class="fas fa-chevron-up text-gray-400 hover:text-green-500"></i>
+                                    </button>
+                                    <span class="mx-2 text-white">0</span>
+                                    <button class="downvote-btn" onclick="vote(this, 'down')">
+                                        <i class="fas fa-chevron-down text-gray-400 hover:text-red-500"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                            </div>
+                        `;
+
+                theoriesContainer.prepend(theoryElement);
+            }
+
+            // Helper function to generate reaction buttons
+            function generateRandomReactions() {
+                const reactions = [
+                    { icon: 'fa-thumbs-up', color: 'blue-400' },
+                    { icon: 'fa-heart', color: 'red-400' },
+                    { icon: 'fa-laugh', color: 'yellow-400' }
+                ];
+
+                return reactions.map(({ icon, color }) => `
+                    <button class="reaction-btn" data-reaction="${icon.split('-')[1]}" 
+                            onclick="addReaction(this)">
+                        <i class="far ${icon} text-gray-400 hover:text-${color}"></i>
+                        <span class="ml-1 text-gray-400">0</span>
+                    </button>
+                `).join('');
+            }
+
+            // Update fan theories button handler
+            function showFanTheories() {
+                const section = document.getElementById('fan-theories-section');
+                section.classList.remove('hidden');
+
+                // Add loading indicator
+                const theoriesContainer = document.querySelector('#chat-theory-section .space-y-6');
+                theoriesContainer.innerHTML = '<div class="text-white text-center py-4">Generating theories...</div>';
+
+                // Rest of your code...
+            }
+
+            // Add to your existing JavaScript
+            document.getElementById('service-code-btn').addEventListener('click', function () {
+                const randomCode = Math.random().toString(36).substring(7).toUpperCase();
+                this.textContent = randomCode;
+                // Show toast or alert with the service code
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'bg-white/10 text-white px-4 py-2 rounded shadow-lg mb-2';
+                toast.textContent = `Service Code: ${randomCode}`;
+                toastContainer.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            });
+
+            // Fan Theories Functions
+            function closeFanTheories() {
+                const section = document.getElementById('fan-theories-section');
+                section.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            function switchFanTheorySection(sectionType) {
+                console.log(`Switching to section: ${sectionType}`);
+
+                // Hide all sections
+                document.querySelectorAll('.theory-section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+
+                // Reset all button styles
+                document.querySelectorAll('.fan-theory-nav-btn').forEach(btn => {
+                    btn.classList.remove('bg-red-600');
+                    btn.classList.add('bg-gray-700');
+                });
+
+                // Show selected section and activate button
+                let selectedSectionId;
+                let selectedBtnId;
+
+                if (sectionType === 'posters') {
+                    selectedSectionId = 'view-posters-section';
+                    selectedBtnId = 'view-posters-btn';
+                } else if (sectionType === 'chat') {
+                    selectedSectionId = 'chat-theory-section';
+                    selectedBtnId = 'chat-theory-btn';
+                } else if (sectionType === 'my') {
+                    selectedSectionId = 'my-theory-section';
+                    selectedBtnId = 'my-theory-btn';
+                }
+
+                const selectedSection = document.getElementById(selectedSectionId);
+                const selectedBtn = document.getElementById(selectedBtnId);
+
+                if (selectedSection && selectedBtn) {
+                    selectedSection.classList.remove('hidden');
+                    selectedBtn.classList.remove('bg-gray-700');
+                    selectedBtn.classList.add('bg-red-600');
+                } else {
+                    console.error(`Could not find section or button for ${sectionType}`);
+                    console.log('Available sections:', document.querySelectorAll('.theory-section'));
+                    console.log('Available buttons:', document.querySelectorAll('.fan-theory-nav-btn'));
+                }
+            }
+
+            function addReaction(btn) {
+                const reactionType = btn.getAttribute('data-reaction');
+                const icon = btn.querySelector('i');
+                const countElem = btn.querySelector('span');
+
+                // Check if already reacted
+                if (icon.classList.contains('fas')) {
+                    // Remove reaction
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+
+                    switch (reactionType) {
+                        case 'like':
+                            icon.classList.remove('text-blue-400');
+                            break;
+                        case 'heart':
+                            icon.classList.remove('text-red-400');
+                            break;
+                        case 'laugh':
+                            icon.classList.remove('text-yellow-400');
+                            break;
+                    }
+
+                    let count = parseInt(countElem.textContent);
+                    countElem.textContent = (count - 1).toString();
+                } else {
+                    // Add reaction
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+
+                    switch (reactionType) {
+                        case 'like':
+                            icon.classList.add('text-blue-400');
+                            break;
+                        case 'heart':
+                            icon.classList.add('text-red-400');
+                            break;
+                        case 'laugh':
+                            icon.classList.add('text-yellow-400');
+                            break;
+                    }
+
+                    let count = parseInt(countElem.textContent);
+                    countElem.textContent = (count + 1).toString();
+                }
+            }
+
+            function vote(btn, voteType) {
+                const voteCountElement = btn.parentElement.querySelector('span');
+                let voteCount = parseInt(voteCountElement.textContent);
+                const upvoteBtn = btn.parentElement.querySelector('.upvote-btn i');
+                const downvoteBtn = btn.parentElement.querySelector('.downvote-btn i');
+
+                // Reset both buttons
+                upvoteBtn.classList.remove('text-green-500');
+                downvoteBtn.classList.remove('text-red-500');
+
+                if (voteType === 'up') {
+                    if (btn.querySelector('i').classList.contains('text-green-500')) {
+                        // Undo upvote
+                        voteCount--;
+                        btn.querySelector('i').classList.remove('text-green-500');
+                    } else {
+                        // Add upvote
+                        voteCount++;
+                        btn.querySelector('i').classList.add('text-green-500');
+                    }
+                } else {
+                    if (btn.querySelector('i').classList.contains('text-red-500')) {
+                        // Undo downvote
+                        voteCount++;
+                        btn.querySelector('i').classList.remove('text-red-500');
+                    } else {
+                        // Add downvote
+                        voteCount--;
+                        btn.querySelector('i').classList.add('text-red-500');
+                    }
+                }
+
+                voteCountElement.textContent = voteCount;
+            }
+
+            // Enhanced submitTheory function
+            function submitTheory() {
+                const title = document.getElementById('theory-title').value;
+                const content = document.getElementById('theory-content').value;
+                const tags = document.getElementById('theory-tags').value;
+
+                if (!title || !content) {
+                    alert('Please provide a title and content for your theory');
+                    return;
+                }
+
+                // Create new theory post and add to user's theories
+                const theoryPost = document.createElement('div');
+                theoryPost.className = 'bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow';
+
+                const now = new Date();
+                const timeAgo = 'Just now';
+
+                const tagsArray = tags ? tags.split(',').map(tag => tag.trim()) : [];
+                const tagsHtml = tagsArray.map(tag => `<span class="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">#${tag}</span>`).join('\n');
+
+                theoryPost.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <h5 class="text-white text-lg font-medium">${title}</h5>
+                    <span class="text-gray-400 text-xs">${timeAgo}</span>
+                </div>
+                <p class="text-gray-300 text-base mb-4 leading-relaxed">${content}</p>
+                <div class="flex flex-wrap gap-2 mt-4 mb-4">
+                    ${tagsHtml}
+                </div>
+                <div class="flex justify-between items-center pt-4 border-t border-gray-700">
+                    <div class="flex items-center gap-3">
+                        <button class="flex items-center gap-1 text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="far fa-eye"></i>
+                            <span class="text-xs">0 views</span>
+                        </button>
+                        <button class="flex items-center gap-1 text-gray-400 hover:text-red-400 transition-colors">
+                            <i class="far fa-heart"></i>
+                            <span class="text-xs">0 likes</span>
+                        </button>
+                        <button class="flex items-center gap-1 text-gray-400 hover:text-green-400 transition-colors">
+                            <i class="far fa-comment"></i>
+                            <span class="text-xs">0 comments</span>
+                        </button>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-400 transition-colors">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+                // Add image if uploaded
+                const imagePreview = document.getElementById('image-preview');
+                if (imagePreview && !imagePreview.classList.contains('hidden')) {
+                    const previewImg = document.getElementById('preview-img');
+
+                    // Create image element and insert after paragraph
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'my-5 rounded-lg overflow-hidden';
+                    imgContainer.innerHTML = `<img src="${previewImg.src}" alt="Theory Image" class="w-full max-h-96 object-contain">`;
+
+                    // Insert after paragraph
+                    const paragraph = theoryPost.querySelector('p');
+                    paragraph.after(imgContainer);
+                }
+
+                // Add to the top of the list
+                const userTheories = document.getElementById('user-theories');
+                if (userTheories) {
+                    userTheories.insertBefore(theoryPost, userTheories.firstChild);
+
+                    // Clear the form
+                    document.getElementById('theory-title').value = '';
+                    document.getElementById('theory-content').value = '';
+                    document.getElementById('theory-tags').value = '';
+
+                    const imageInput = document.getElementById('theory-image');
+                    if (imageInput) imageInput.value = '';
+
+                    if (imagePreview) imagePreview.classList.add('hidden');
+
+                    // Show success message with a nice toast instead of alert
+                    const body = document.body;
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed top-6 right-6 bg-green-600 text-white py-3 px-6 rounded-md shadow-lg z-[2000] flex items-center';
+                    toast.innerHTML = `
+                    <i class="fas fa-check-circle mr-3 text-xl"></i>
+                    <span>Your theory has been posted successfully!</span>
+                `;
+                    body.appendChild(toast);
+
+                    // Remove the toast after 3 seconds
+                    setTimeout(() => {
+                        toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                        setTimeout(() => toast.remove(), 300);
+                    }, 3000);
+                }
+            }
+
+            // Profile Management Functions
+            const STORAGE_KEY = 'netflix_profiles';
+            let currentProfile = null;
+
+            // Initialize profiles if they don't exist
+            function initializeProfiles() {
+                if (!localStorage.getItem(STORAGE_KEY)) {
+                    const defaultProfiles = [
+                        {
+                            id: 1,
+                            name: 'User 1',
+                            avatar: 'https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp',
+                            gameHandle: 'Player1'
+                        }
+                    ];
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultProfiles));
+                }
+
+                // Set current profile if not set
+                if (!localStorage.getItem('current_profile')) {
+                    const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                    if (profiles && profiles.length > 0) {
+                        localStorage.setItem('current_profile', JSON.stringify(profiles[0]));
+                    }
+                }
+
+                // Load current profile
+                currentProfile = JSON.parse(localStorage.getItem('current_profile')) || null;
+                updateProfileUI();
+                updateProfileList();
+            }
+
+            // Update profile UI elements
+            function updateProfileUI() {
+                if (currentProfile) {
+                    const profileButton = document.querySelector('#profile-button img');
+                    const profileImg = document.getElementById('current-profile-img');
+
+                    if (profileButton) {
+                        profileButton.src = currentProfile.avatar;
+                        profileButton.alt = currentProfile.name;
+                    }
+
+                    if (profileImg) {
+                        profileImg.src = currentProfile.avatar;
+                        profileImg.alt = currentProfile.name;
+                    }
+                }
+            }
+
+            // Update the profile list in dropdown menu
+            function updateProfileList() {
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                const profileList = document.getElementById('profile-list');
+
+                if (!profileList) return;
+
+                profileList.innerHTML = '';
+
+                profiles.forEach(profile => {
+                    const profileItem = document.createElement('div');
+                    profileItem.className = 'flex items-center gap-3 p-2 hover:bg-gray-800 rounded cursor-pointer';
+                    profileItem.onclick = () => switchProfile(profile.id);
+
+                    profileItem.innerHTML = `
+                    <img src="${profile.avatar}" alt="${profile.name}" class="w-8 h-8 rounded">
+                    <span class="text-sm text-gray-300">${profile.name}</span>
+                    ${currentProfile && profile.id === currentProfile.id ? '<i class="fas fa-check text-white ml-auto"></i>' : ''}
+                `;
+
+                    profileList.appendChild(profileItem);
+                });
+
+                // Add "Add Profile" option at the end
+                const addProfileItem = document.createElement('div');
+                addProfileItem.className = 'flex items-center gap-3 p-2 hover:bg-gray-800 rounded cursor-pointer';
+                addProfileItem.onclick = showAddProfilePage;
+                addProfileItem.innerHTML = `
+                <div class="w-8 h-8 bg-gray-600 rounded flex items-center justify-center">
+                    <i class="fas fa-plus text-white"></i>
+                </div>
+                <span class="text-sm text-gray-300">Add Profile</span>
+            `;
+                profileList.appendChild(addProfileItem);
+            }
+
+            // Toggle Profile Menu
+            function toggleProfileMenu() {
+                const menu = document.getElementById('profile-menu');
+                if (menu) {
+                    menu.classList.toggle('hidden');
+                    if (!menu.classList.contains('hidden')) {
+                        updateProfileList();
+                    }
+                }
+            }
+
+            // Switch to a different profile
+            function switchProfile(profileId) {
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                const profile = profiles.find(p => p.id === profileId);
+
+                if (profile) {
+                    localStorage.setItem('current_profile', JSON.stringify(profile));
+                    currentProfile = profile;
+                    updateProfileUI();
+
+                    // Close the menu
+                    const menu = document.getElementById('profile-menu');
+                    if (menu) {
+                        menu.classList.add('hidden');
+                    }
+
+                    // Reload to refresh content
+                    window.location.reload();
+                }
+            }
+
+            // Exit profile (could return to profile selection)
+            function exitProfile() {
+                localStorage.removeItem('current_profile');
+                window.location.reload();
+            }
+
+            // Show account settings
+            function showAccountSettings() {
+                alert('Account settings would be shown here');
+                const profileMenu = document.getElementById('profile-menu');
+                if (profileMenu) {
+                    profileMenu.classList.add('hidden');
+                }
+            }
+
+            // Sign out
+            function signOut() {
+                localStorage.removeItem('current_profile');
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            }
+
+            // Navigate to manage profiles screen
+            function navigateToManageProfiles() {
+                const modal = document.getElementById('profile-management-modal');
+                modal.classList.remove('hidden');
+                renderProfileManagementContent();
+
+                // Close the profile menu
+                const profileMenu = document.getElementById('profile-menu');
+                if (profileMenu) {
+                    profileMenu.classList.add('hidden');
+                }
+            }
+
+            function renderProfileManagementContent() {
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                const container = document.querySelector('#profile-management-content .flex-wrap');
+
+                if (!container) return;
+
+                let profilesHTML = '';
+                profiles.forEach(profile => {
+                    profilesHTML += `
+                <button onclick="showUpdateProfileModal('${btoa(JSON.stringify(profile.id))}')"
+                    class="group flex flex-col items-center gap-4">
+                    <div class="relative aspect-square h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded shadow-sm group-hover:ring-2 group-hover:ring-slate-500">
+                        <img
+                            alt="${profile.name}"
+                            class="w-full h-full object-cover"
+                            src="${profile.avatar}"
+                        />
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fas fa-pencil-alt text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-sm text-slate-400 group-hover:text-slate-50 sm:text-base">
+                        ${profile.name}
+                    </h2>
+                </button>`;
+                });
+
+                // Add "Add Profile" button if there are less than 4 profiles
+                if (profiles.length < 4) {
+                    profilesHTML += `
+                <button onclick="showAddProfileModal()"
+                    class="group flex flex-col items-center gap-4">
+                    <div class="relative aspect-square h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded shadow-sm bg-neutral-800 group-hover:ring-2 group-hover:ring-slate-500 flex items-center justify-center">
+                        <i class="fas fa-plus text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-sm text-slate-400 group-hover:text-slate-50 sm:text-base">
+                        Add Profile
+                    </h2>
+                </button>`;
+                }
+
+                container.innerHTML = profilesHTML;
+            }
+
+            function closeProfileManagement() {
+                document.getElementById('profile-management-modal').classList.add('hidden');
+            }
+
+            function showUpdateProfileModal(encodedProfileId) {
+                const profileId = JSON.parse(atob(encodedProfileId));
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                const profile = profiles.find(p => p.id === profileId);
+
+                if (!profile) {
+                    alert('Profile not found');
+                    return;
+                }
+
+                // Update modal title and form
+                document.getElementById('update-profile-title').textContent = 'Edit Profile';
+                document.getElementById('update-profile-id').value = profileId;
+                document.getElementById('update-profile-name').value = profile.name;
+                document.getElementById('update-profile-avatar-preview').src = profile.avatar;
+                document.getElementById('update-profile-game-handle').value = profile.gameHandle || '';
+
+                // Show delete button
+                document.getElementById('delete-profile-btn').classList.remove('hidden');
+
+                // Show modal
+                document.getElementById('update-profile-modal').classList.remove('hidden');
+            }
+
+            function showAddProfileModal() {
+                // Update modal title and form
+                document.getElementById('update-profile-title').textContent = 'Add Profile';
+                document.getElementById('update-profile-id').value = 'new';
+                document.getElementById('update-profile-name').value = '';
+                document.getElementById('update-profile-avatar-preview').src = 'https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp';
+                document.getElementById('update-profile-game-handle').value = '';
+
+                // Hide delete button
+                document.getElementById('delete-profile-btn').classList.add('hidden');
+
+                // Show modal
+                document.getElementById('update-profile-modal').classList.remove('hidden');
+            }
+
+            function closeProfileModal() {
+                document.getElementById('update-profile-modal').classList.add('hidden');
+            }
+
+            function saveProfile() {
+                const profileId = document.getElementById('update-profile-id').value;
+                const name = document.getElementById('update-profile-name').value;
+                const avatar = document.getElementById('update-profile-avatar-preview').src;
+                const gameHandle = document.getElementById('update-profile-game-handle').value;
+
+                if (!name) {
+                    alert('Please enter a profile name');
+                    return;
+                }
+
+                if (name.length < 2 || name.length > 20) {
+                    alert('Name must be between 2 and 20 characters');
+                    return;
+                }
+
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+                if (profileId === 'new') {
+                    // Add new profile
+                    const newProfile = {
+                        id: Date.now(),
+                        name,
+                        avatar,
+                        gameHandle: gameHandle || `Player${profiles.length + 1}`
+                    };
+                    profiles.push(newProfile);
+                } else {
+                    // Update existing profile
+                    const index = profiles.findIndex(p => p.id === parseInt(profileId));
+                    if (index === -1) {
+                        alert('Profile not found');
+                        return;
+                    }
+
+                    profiles[index] = {
+                        ...profiles[index],
+                        name,
+                        avatar,
+                        gameHandle: gameHandle || profiles[index].gameHandle
+                    };
+
+                    // Update current profile if needed
+                    if (currentProfile && currentProfile.id === parseInt(profileId)) {
+                        currentProfile = profiles[index];
+                        localStorage.setItem('current_profile', JSON.stringify(currentProfile));
+                        updateProfileUI();
+                    }
+                }
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+
+                // Show success message
+                showProfileUpdateSuccess();
+
+                // Close modal and refresh management view
+                closeProfileModal();
+                renderProfileManagementContent();
+            }
+
+            function toggleUpdateProfileAvatarPicker() {
+                document.getElementById('avatar-picker-modal').classList.remove('hidden');
+            }
+
+            function closeAvatarPicker() {
+                document.getElementById('avatar-picker-modal').classList.add('hidden');
+            }
+
+            function selectAvatar(avatarUrl) {
+                document.getElementById('update-profile-avatar-preview').src = avatarUrl;
+                closeAvatarPicker();
+            }
+
+            // ... rest of existing code ...
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                initializeProfiles();
+            });
+
+            // ... existing code ...
+
+            // Toggle avatar picker in Add Profile page
+            function toggleAddProfileAvatarPicker() {
+                const mainForm = document.getElementById('add-profile-main-form');
+                const avatarPicker = document.getElementById('add-profile-avatar-picker');
+
+                if (mainForm && avatarPicker) {
+                    mainForm.classList.toggle('hidden');
+                    avatarPicker.classList.toggle('hidden');
+                }
+            }
+
+            // Select avatar in Add Profile page
+            function selectAddProfileAvatar(avatarUrl) {
+                document.getElementById('add-profile-avatar-preview').src = avatarUrl;
+                toggleAddProfileAvatarPicker();
+            }
+
+            // Toggle avatar picker in Update Profile page
+            function toggleUpdateProfileAvatarPicker() {
+                const mainForm = document.getElementById('update-profile-main-form');
+                const avatarPicker = document.getElementById('update-profile-avatar-picker');
+
+                if (mainForm && avatarPicker) {
+                    mainForm.classList.toggle('hidden');
+                    avatarPicker.classList.toggle('hidden');
+                }
+            }
+
+            // Select avatar in Update Profile page
+            function selectUpdateProfileAvatar(avatarUrl) {
+                document.getElementById('update-profile-avatar-preview').src = avatarUrl;
+                toggleUpdateProfileAvatarPicker();
+            }
+
+            // Original addProfile for the dropdown menu
+            function addProfile() {
+                // Just redirect to the showAddProfilePage function
+                // First navigate to manage profiles screen
+                navigateToManageProfiles();
+
+                // Then show add profile interface (which is now the update profile interface)
+                setTimeout(() => {
+                    showAddProfilePage();
+                }, 100);
+            }
+
+            // Profile Management Functions
+            function openProfileManagement() {
+                const modal = document.getElementById('profile-management-modal');
+                modal.classList.remove('hidden');
+                renderProfiles();
+            }
+
+            function closeProfileManagement() {
+                const modal = document.getElementById('profile-management-modal');
+                modal.classList.add('hidden');
+            }
+
+            function renderProfiles() {
+                const profilesContainer = document.querySelector('#profile-management-content .flex');
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+                profilesContainer.innerHTML = profiles.map(profile => `
+                <div class="flex flex-col items-center gap-2">
+                    <button onclick="openUpdateProfile('${profile.id}')"
+                        class="relative aspect-square h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded shadow-sm hover:ring-2 hover:ring-slate-500 transition-all">
+                        <img src="${profile.avatar}" alt="${profile.name}" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                            <i class="fas fa-pencil-alt text-white text-xl"></i>
+                        </div>
+                    </button>
+                    <span class="text-lg text-neutral-400">${profile.name}</span>
+                </div>
+            `).join('') + `
+                <div class="flex flex-col items-center gap-2">
+                    <button onclick="openAddProfile()"
+                        class="aspect-square h-24 w-24 sm:h-32 sm:w-32 rounded border-2 border-neutral-600 hover:border-white transition-colors flex items-center justify-center">
+                        <i class="fas fa-plus text-neutral-600 text-4xl"></i>
+                    </button>
+                    <span class="text-lg text-neutral-400">Add Profile</span>
+                </div>
+            `;
+            }
+
+            function openUpdateProfile(profileId) {
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                const profile = profiles.find(p => p.id === profileId);
+                if (!profile) return;
+
+                document.getElementById('update-profile-id').value = profile.id;
+                document.getElementById('update-profile-name').value = profile.name;
+                document.getElementById('update-profile-game-handle').value = profile.gameHandle || '';
+                document.getElementById('update-profile-avatar-preview').src = profile.avatar;
+                document.getElementById('update-profile-title').textContent = 'Edit Profile';
+                document.getElementById('delete-profile-btn').style.display = 'block';
+
+                const modal = document.getElementById('update-profile-modal');
+                modal.classList.remove('hidden');
+            }
+
+            function openAddProfile() {
+                document.getElementById('update-profile-id').value = '';
+                document.getElementById('update-profile-name').value = '';
+                document.getElementById('update-profile-game-handle').value = '';
+                document.getElementById('update-profile-avatar-preview').src = 'https://res.cloudinary.com/dasxoa9r4/image/upload/v1682057683/netflx-web/gqeggax72gql50gq3ag0.webp';
+                document.getElementById('update-profile-title').textContent = 'Add Profile';
+                document.getElementById('delete-profile-btn').style.display = 'none';
+
+                const modal = document.getElementById('update-profile-modal');
+                modal.classList.remove('hidden');
+            }
+
+            function closeProfileModal() {
+                const modal = document.getElementById('update-profile-modal');
+                modal.classList.add('hidden');
+            }
+
+            function toggleUpdateProfileAvatarPicker() {
+                const modal = document.getElementById('avatar-picker-modal');
+                modal.classList.remove('hidden');
+            }
+
+            function closeAvatarPicker() {
+                const modal = document.getElementById('avatar-picker-modal');
+                modal.classList.add('hidden');
+            }
+
+            function selectAvatar(avatarUrl) {
+                document.getElementById('update-profile-avatar-preview').src = avatarUrl;
+                closeAvatarPicker();
+            }
+
+            function saveProfile() {
+                const profileId = document.getElementById('update-profile-id').value;
+                const name = document.getElementById('update-profile-name').value.trim();
+                const gameHandle = document.getElementById('update-profile-game-handle').value.trim();
+                const avatar = document.getElementById('update-profile-avatar-preview').src;
+
+                if (!name) {
+                    alert('Please enter a profile name');
+                    return;
+                }
+
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+                if (profileId) {
+                    // Update existing profile
+                    const index = profiles.findIndex(p => p.id === profileId);
+                    if (index !== -1) {
+                        profiles[index] = { ...profiles[index], name, gameHandle, avatar };
+                    }
+                } else {
+                    // Add new profile
+                    profiles.push({
+                        id: Date.now().toString(),
+                        name,
+                        gameHandle,
+                        avatar,
+                        language: 'ENGLISH'
+                    });
+                }
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+                closeProfileModal();
+                renderProfiles();
+                updateProfileList(); // Update the navbar profile list
+            }
+
+            function deleteProfile() {
+                const profileId = document.getElementById('update-profile-id').value;
+                if (!profileId) return;
+
+                if (!confirm('Are you sure you want to delete this profile?')) return;
+
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                const filteredProfiles = profiles.filter(p => p.id !== profileId);
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredProfiles));
+
+                // If current profile is deleted, switch to first available profile or clear current profile
+                const currentProfile = JSON.parse(localStorage.getItem('current_profile'));
+                if (currentProfile && currentProfile.id === profileId) {
+                    if (filteredProfiles.length > 0) {
+                        localStorage.setItem('current_profile', JSON.stringify(filteredProfiles[0]));
+                        updateCurrentProfile();
+                    } else {
+                        localStorage.removeItem('current_profile');
+                        window.location.reload();
+                    }
+                }
+
+                closeProfileModal();
+                renderProfiles();
+                updateProfileList(); // Update the navbar profile list
+            }
+
+            // Add Profile Functions
+            function showAddProfilePage() {
+                document.getElementById('add-profile-screen').classList.remove('hidden');
+                document.getElementById('add-profile-main-form').classList.remove('hidden');
+                document.getElementById('add-profile-avatar-picker').classList.add('hidden');
+                document.getElementById('profile-management-modal').classList.add('hidden');
+            }
+
+            function toggleAddProfileAvatarPicker() {
+                const mainForm = document.getElementById('add-profile-main-form');
+                const avatarPicker = document.getElementById('add-profile-avatar-picker');
+
+                mainForm.classList.toggle('hidden');
+                avatarPicker.classList.toggle('hidden');
+            }
+
+            function selectAddProfileAvatar(avatarUrl) {
+                document.getElementById('add-profile-avatar-preview').src = avatarUrl;
+                toggleAddProfileAvatarPicker();
+            }
+
+            function saveNewProfile() {
+                const name = document.getElementById('add-profile-name').value.trim();
+                const avatar = document.getElementById('add-profile-avatar-preview').src;
+
+                if (!name) {
+                    alert('Please enter a profile name');
+                    return;
+                }
+
+                if (name.length < 2 || name.length > 20) {
+                    alert('Name must be between 2 and 20 characters');
+                    return;
+                }
+
+                const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+                // Add new profile
+                const newProfile = {
+                    id: Date.now().toString(),
+                    name,
+                    avatar,
+                    gameHandle: `Player${profiles.length + 1}`,
+                    language: 'ENGLISH'
+                };
+
+                profiles.push(newProfile);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+
+                // Show success message
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-6 right-6 bg-green-600 text-white py-3 px-6 rounded-md shadow-lg z-[2000] flex items-center';
+                toast.innerHTML = `
+                    <i class="fas fa-check-circle mr-3 text-xl"></i>
+                    <span>Profile Created successfully ✅</span>
+                `;
+                document.body.appendChild(toast);
+
+                // Remove toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+
+                // Close add profile screen and refresh management view
+                document.getElementById('add-profile-screen').classList.add('hidden');
+                renderProfiles();
+                updateProfileList();
+            }
+
+            // Add the missing profile menu initialization
+            function initializeProfileMenu() {
+                const profileButton = document.getElementById('profile-button');
+                const profileMenu = document.getElementById('profile-menu');
+
+                if (profileButton && profileMenu) {
+                    // Toggle menu on profile button click
+                    profileButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isHidden = profileMenu.classList.contains('hidden');
+
+                        if (isHidden) {
+                            // Show menu with animation
+                            profileMenu.classList.remove('hidden');
+                            profileMenu.classList.add('animate-in', 'slide-in-from-top-2');
+                        } else {
+                            // Hide menu
+                            profileMenu.classList.add('hidden');
+                            profileMenu.classList.remove('animate-in', 'slide-in-from-top-2');
+                        }
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!profileButton.contains(e.target) && !profileMenu.contains(e.target)) {
+                            profileMenu.classList.add('hidden');
+                            profileMenu.classList.remove('animate-in', 'slide-in-from-top-2');
+                        }
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                initializeProfileMenu();
+            });
+
+            async function generateFanTheories(movie) {
+                try {
+                    const prompt = `Generate 10 unique fan theories for ${movie.title}. For each theory:
+1. Create a creative fictional theorist name (e.g., "Lore Explorer", "Cinema Sleuth")
+2. Write a 2-3 paragraph theory with specific scene/character references
+3. Make theories range from plausible to speculative
+4. Format exactly like:
+   **[Theorist Name]** 
+   [Theory text]`;
+
+                    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            safetySettings: [{ category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }],
+                            generationConfig: { temperature: 0.9, topK: 40, topP: 0.95 }
+                        })
+                    });
+
+                    const data = await response.json();
+                    return data.candidates[0].content.parts[0].text;
+
+                } catch (error) {
+                    console.error('Error generating theories:', error);
+                    return fallbackTheories;
+                }
+            }
+
+            function parseTheories(rawText) {
+                return rawText.split('\n\n').filter(t => t.startsWith('**')).map(theory => {
+                    const [nameLine, ...contentLines] = theory.split('\n');
+                    return {
+                        theorist: nameLine.replace('**', '').trim(),
+                        content: contentLines.join('\n').trim()
+                    };
+                });
+            }
+
+            async function showFanTheories() {
+                const section = document.getElementById('fan-theories-section');
+                section.classList.remove('hidden');
+
+                const theoriesContainer = document.querySelector('#chat-theory-section .space-y-6');
+                theoriesContainer.innerHTML = '<div class="text-center py-4">Generating theories...</div>';
+
+                try {
+                    const rawTheories = await generateFanTheories(currentMovie);
+                    const parsedTheories = parseTheories(rawTheories);
+
+                    theoriesContainer.innerHTML = parsedTheories.map((theory, index) => `
+                        <div class="fan-theory-post bg-gray-800 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <img src="https://i.pravatar.cc/150?img=${index + 10}" 
+                                     alt="${theory.theorist}" class="w-10 h-10 rounded-full mr-3">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="text-white font-medium">${theory.theorist}</h4>
+                                        <span class="text-gray-400 text-sm">Just now</span>
+                                    </div>
+                                    <p class="text-gray-200 mb-4">${theory.content}</p>
+                                    <!-- Keep existing reaction/vote UI -->
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                } catch (error) {
+                    theoriesContainer.innerHTML = '<div class="text-red-500">Error loading theories. Please try again later.</div>';
+                }
+            }
+
+            const fallbackTheories = `
+            **Lila Voss**
+            The opening chess game between Beth and Mr. Shaibel isn't just about strategy - it's a metaphor for the Cold War. Each piece represents a geopolitical player, with the queen symbolizing nuclear capability. The show's color palette shifts whenever Beth makes a move that parallels real-world events.
+
+            **The Temporal Theorist**
+            What if the entire series is a time-loop punishment for Beth? The recurring mirror shots and her mother's cryptic "you'll see" suggest she's reliving her life to atone for abandoning her adoptive family. The Russian finale is actually her breaking the cycle.
+
+            ... (additional fallback theories) ...
+            `;
+
+            // Update play button handler
+            document.getElementById('play-button').addEventListener('click', () => {
+                const iframe = document.querySelector('#video-container iframe');
+                if (iframe) {
+                    iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+                }
+            });
+
+            // Add separate play function
+            function playBannerVideo() {
+                const iframe = document.querySelector('#video-container iframe');
+                if (iframe) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                } else {
+                    showMovieDetails(currentBannerId);
+                }
+            }
+
+            // Add these variables at the top
+            let isMuted = true;
+            let isPlaying = false;
+
+            // Update video container creation
+            if (videoData.results?.length > 0) {
+                const trailer = videoData.results.find(v => v.type === "Trailer") || videoData.results[0];
+                videoContainer.innerHTML = `
+                    <iframe 
+                        width="100%" 
+                        height="100%"
+                        src="https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&enablejsapi=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                `;
+                isMuted = true;
+                isPlaying = true;
+            }
+
+            // Add mute/unmute functionality
+            document.getElementById('mute-button').addEventListener('click', function () {
+                const iframe = document.getElementById('yt-video');
+                isMuted = !isMuted;
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: isMuted ? 'mute' : 'unMute'
+                }), '*');
+                this.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+            });
+
+            // Update play button functionality
+            document.getElementById('play-button').addEventListener('click', function () {
+                const iframe = document.getElementById('yt-video');
+                isPlaying = !isPlaying;
+
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: isPlaying ? 'playVideo' : 'pauseVideo'
+                }), '*');
+
+                this.innerHTML = isPlaying
+                    ? '<i class="fas fa-pause mr-5 xl:mr-2"></i>Pause'
+                    : '<i class="fas fa-play mr-5 xl:mr-2"></i>Play';
+            });
+
+            // Add keyboard controls
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    document.getElementById('play-button').click();
+                }
+            });
+
+            // Update banner play button
+            function playBannerVideo() {
+                const iframe = document.getElementById('yt-video');
+                if (!iframe) {
+                    showMovieDetails(currentBannerId);
+                    return;
+                }
+
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'playVideo'
+                }), '*');
+
+                isPlaying = true;
+                document.getElementById('play-button').innerHTML = '<i class="fas fa-pause mr-5 xl:mr-2"></i>Pause';
+            }
+        </script>
+</body>
+
+</html>
